@@ -1,1 +1,6 @@
 libgdx.png
+Preview.png
+skin/default.fnt
+skin/uiskin.atlas
+skin/uiskin.json
+skin/uiskin.png
