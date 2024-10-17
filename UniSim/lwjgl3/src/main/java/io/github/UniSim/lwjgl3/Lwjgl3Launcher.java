@@ -18,6 +18,7 @@ public class Lwjgl3Launcher {
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
         Lwjgl3ApplicationConfiguration configuration = new Lwjgl3ApplicationConfiguration();
+        configuration.setResizable(false);
         configuration.setTitle("UniSim");
         //// Vsync limits the frames per second to what your hardware can display, and
         //// helps eliminate
@@ -35,7 +36,8 @@ public class Lwjgl3Launcher {
         //// hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can
         //// cause screen tearing.
-        configuration.setWindowedMode(1366, 768);
+        configuration.setWindowedMode(980, 864);
+
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
         return configuration;
