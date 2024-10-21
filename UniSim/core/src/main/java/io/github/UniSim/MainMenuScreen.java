@@ -42,35 +42,35 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
         game.batch.draw(background, 0, 0);
-        game.batch.draw(header, 75, 700);
+        game.batch.draw(header, 45, 580);
 
-        if (Gdx.input.getX() < 735 && Gdx.input.getX() > 245 && Gdx.input.getY() < 412 && Gdx.input.getY() > 312) {
-            game.batch.draw(playbuttonactive, 325, 457);
+        if (Gdx.input.getX() > 370 && Gdx.input.getX() < 620 && Gdx.input.getY() < 450 && Gdx.input.getY() > 360) {
+            game.batch.draw(playbuttonactive, 370, 400);
             if (Gdx.input.isTouched()) {
                 this.dispose();
                 game.setScreen(new MainGameScreen(game));
             }
         } else {
-            game.batch.draw(playbuttoninactive, 325, 457);
+            game.batch.draw(playbuttoninactive, 370, 400);
         }
 
-        if (Gdx.input.getX() > 125 && Gdx.input.getX() < 950 && Gdx.input.getY() < 525 && Gdx.input.getY() > 425) {
-            game.batch.draw(howbuttonactive, 125, 330);
+        if (Gdx.input.getX() > 180 && Gdx.input.getX() < 800 && Gdx.input.getY() < 590 && Gdx.input.getY() > 460) {
+            game.batch.draw(howbuttonactive, 180, 270);
             if (Gdx.input.isTouched()) {
                 this.dispose();
                 game.setScreen(new InstructionScreen(game));
             }
         } else {
-            game.batch.draw(howbuttoninactive, 125, 330);
+            game.batch.draw(howbuttoninactive, 180, 270);
         }
 
-        if (Gdx.input.getX() < 685 && Gdx.input.getX() > 325 && Gdx.input.getY() > 532 && Gdx.input.getY() < 632) {
-            game.batch.draw(exitbuttonactive, 325, 232);
+        if (Gdx.input.getX() > 370 && Gdx.input.getX() < 620 && Gdx.input.getY() < 710 && Gdx.input.getY() > 610) {
+            game.batch.draw(exitbuttonactive, 370, 150);
             if (Gdx.input.isTouched()) {
                 Gdx.app.exit();
             }
         } else {
-            game.batch.draw(exitbuttoninactive, 325, 232);
+            game.batch.draw(exitbuttoninactive, 370, 150);
         }
 
         game.batch.end();
