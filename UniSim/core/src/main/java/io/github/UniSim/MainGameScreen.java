@@ -52,10 +52,14 @@ public class MainGameScreen implements Screen {
         }
 
         game.batch.begin();
+
         game.batch.draw(image, x, y);
-        GlyphLayout timeLayout = new GlyphLayout(timeFont, "" + timer.update());
-        timeFont.draw(game.batch, timeLayout, Gdx.graphics.getWidth() / 2 - timeLayout.width / 2,
-                Gdx.graphics.getHeight() - timeLayout.height - 5);
+
+        GlyphLayout TimeLayout = new GlyphLayout(timeFont, timer.updateRealTime() +
+                " Y:" + timer.getGameYear() + " M:" + timer.getGameMonth());
+        timeFont.draw(game.batch, TimeLayout, Gdx.graphics.getWidth() / 2 - TimeLayout.width / 2,
+                Gdx.graphics.getHeight() - TimeLayout.height - 2);
+
         game.batch.end();
 
     }
