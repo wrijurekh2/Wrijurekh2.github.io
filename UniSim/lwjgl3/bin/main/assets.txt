@@ -1,5 +1,4 @@
 BACKGROUND.jpg
-Crang.ttf
 EXIT_BUTTON_ACTIVE.png
 EXIT_BUTTON_INACTIVE.png
 HEADER.png
@@ -10,7 +9,5 @@ m1.png
 PLAY_BUTTON_ACTIVE.png
 PLAY_BUTTON_INACTIVE.png
 Preview.png
-score.fnt
-score.png
 START_BUTTON_ACTIVE.png
 START_BUTTON_INACTIVE.png

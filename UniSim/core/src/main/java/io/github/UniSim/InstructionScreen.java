@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 
 public class InstructionScreen implements Screen {
 
@@ -13,19 +11,15 @@ public class InstructionScreen implements Screen {
 
     Texture InBackground;
 
-    BitmapFont Font;
-    String Instructions;
-
     public InstructionScreen(Main game) {
         this.game = game;
         InBackground = new Texture("BACKGROUND.jpg");
-        Font = new BitmapFont(Gdx.files.internal("blackFnt.fnt"));
-        Instructions = "Instruction1\nInstruction2\nInstruction3\nInstruction4";
-        Font.getData().setScale(1.4f);
+
     }
 
     @Override
     public void show() {
+
     }
 
     @Override
@@ -34,11 +28,6 @@ public class InstructionScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
         game.batch.draw(InBackground, 0, 0);
-
-        GlyphLayout TimeLayout = new GlyphLayout(Font, Instructions);
-        Font.draw(game.batch, TimeLayout, Gdx.graphics.getWidth() / 2 - TimeLayout.width / 2,
-                Gdx.graphics.getHeight() - TimeLayout.height - 50);
-
         game.batch.end();
 
     }
