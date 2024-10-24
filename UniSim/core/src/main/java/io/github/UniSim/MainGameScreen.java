@@ -14,6 +14,7 @@ public class MainGameScreen implements Screen {
     Texture MAPV2;
     float x;
     float y;
+    //abbb
     OrthographicCamera camera;
 
     Main game;
