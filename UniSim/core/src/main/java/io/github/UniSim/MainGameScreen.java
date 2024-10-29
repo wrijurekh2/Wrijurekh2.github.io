@@ -35,8 +35,8 @@ public class MainGameScreen implements Screen {
 
     @Override
     public void show() {
-        MAPV2 = new Texture("MAPV2.gif");
         timer = new TimerClass(5);
+        MAPV2 = new Texture("MAPV2.gif");
         inventory = new Texture("INVENTORY.png");
         PauseButtonActive = new Texture("PAUSE_BUTTON_ACTIVE.png");
         PauseButtonInactive = new Texture("PAUSE_BUTTON_INACTIVE.png");
@@ -44,7 +44,6 @@ public class MainGameScreen implements Screen {
         camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
         cameraX = camera.position.x;
         cameraY = camera.position.x - (camera.viewportHeight / 2);
-
     }
 
     @Override
@@ -75,22 +74,29 @@ public class MainGameScreen implements Screen {
         game.batch.begin();
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.draw(MAPV2, x, y);
+
         if (Gdx.input.isKeyPressed(Keys.TAB)) {
             game.batch.draw(inventory, 250, 300);
         }
+
         game.batch.draw(PauseButtonInactive, 850, 830);
         if (Gdx.input.getX() > 850 && Gdx.input.getX() < 979 && Gdx.input.getY() > 1 && Gdx.input.getY() < 34) {
             game.batch.draw(PauseButtonActive, 850, 830);
             if (Gdx.input.isTouched()) {
 
             }
-
         }
 
-        GlyphLayout timeLayout = new GlyphLayout(timeFont, "" + timer.update());
-        timeFont.draw(game.batch, timeLayout, Gdx.graphics.getWidth() / 2 - timeLayout.width / 2,
-                Gdx.graphics.getHeight() - timeLayout.height - 5);
+        GlyphLayout RealTimeLayout = new GlyphLayout(timeFont, timer.updateRealTime());
+        timeFont.draw(game.batch, RealTimeLayout, Gdx.graphics.getWidth() / 2 - RealTimeLayout.width / 2 - 120,
+                Gdx.graphics.getHeight() - RealTimeLayout.height - 2);
+
+        GlyphLayout GameTimeLayout = new GlyphLayout(timeFont, "Y:" + timer.getGameYear() + " M:" + timer.getGameMonth());
+        timeFont.draw(game.batch, GameTimeLayout, Gdx.graphics.getWidth() / 2 - GameTimeLayout.width / 2 + 120,
+                Gdx.graphics.getHeight() - GameTimeLayout.height - 2);
+
         game.batch.end();
+
     }
 
     @Override
