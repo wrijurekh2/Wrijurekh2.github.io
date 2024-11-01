@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 
 public class MainGameScreen implements Screen {
     public static final float speed = 120;
@@ -41,12 +40,14 @@ public class MainGameScreen implements Screen {
     private Rectangle librarybounds;
     private Rectangle cafeteriabounds;
     private Rectangle recreationalhubbounds;
+    private Rectangle a;
     private int accomodationcount = 3;
     private int librarycount = 3;
     private int cafeteriacount = 3;
     private int recreationalhubcount = 3;
     Rectangle trashCanBounds;
 
+    //Initialises the main game
     public MainGameScreen(Main game) {
         this.game = game;
         timeFont = new BitmapFont(Gdx.files.internal("score.fnt"));
@@ -54,7 +55,8 @@ public class MainGameScreen implements Screen {
 
     @Override
     public void show() {
-        timer = new TimerClass(5);
+        //Sets all the textures
+        timer = new TimerClass(5); //Starts the timer (5 minutes)
         MAPV2 = new Texture("MAPV2.gif");
         inventory = new Texture("INVENTORY.png");
         PauseButtonActive = new Texture("PAUSE_BUTTON_ACTIVE.png");
@@ -72,9 +74,10 @@ public class MainGameScreen implements Screen {
         librarybounds = new Rectangle(300, 10, 128, 128);
         cafeteriabounds = new Rectangle(550, 10, 128, 128);
         recreationalhubbounds = new Rectangle(800, 10, 128, 128);
+        a = new Rectangle(850, 810, 137, 37);
         trashCanBounds = new Rectangle(10, Gdx.graphics.getHeight() - 54, 64, 64);
 
-        // Initialize cameras
+        // Initialise cameras
         camera = new OrthographicCamera(980, 864);
         camera.translate(camera.viewportWidth / 2, camera.viewportHeight / 2);
         hudcamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -90,10 +93,18 @@ public class MainGameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //Records the mouse location
         float touchX = Gdx.input.getX();
         float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
-        if (!ispaused) {
+        //If the pause button is clicked it will pause/unpause the game
+        if (Gdx.input.justTouched()){
+            if(a.contains(touchX,touchY)){
+                ispaused = !ispaused;
+            }
+        }
+
+        if (!ispaused) { //Game resumes
             camera.update();
             timer.resume();
 
@@ -107,8 +118,8 @@ public class MainGameScreen implements Screen {
             if (Gdx.input.isKeyPressed(Keys.RIGHT))
                 camera.translate(1f, 0);
 
+            //Handle all mouse inputs for the buildings
             if (Gdx.input.isTouched()) {
-
                 if (!dragAndDropManager.isDragging()) {
                     // Check if we're selecting an existing building to reposition
                     if (!dragAndDropManager.selectPlacedBuilding(touchX, touchY)) {
@@ -127,7 +138,7 @@ public class MainGameScreen implements Screen {
                             recreationalhubcount--;
                         }
                     }
-                } else {
+                }else {
                     // Update drag position
                     dragAndDropManager.updateDragPosition(touchX, touchY);
 
@@ -145,13 +156,14 @@ public class MainGameScreen implements Screen {
             }
 
         } else {
-            timer.pause();
+            timer.pause(); //Pause the timer
         }
 
         // Render the main game world using the main camera
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        game.batch.draw(MAPV2, 0, 0); // Draw background or map
+        game.batch.draw(MAPV2, 0, 0); // Draw the map
+
         dragAndDropManager.drawPlacedBuildings(game.batch);
         game.batch.end();
 
@@ -160,6 +172,7 @@ public class MainGameScreen implements Screen {
         game.batch.setProjectionMatrix(hudcamera.combined);
         game.batch.begin();
 
+        //UI implementation
         if (dragAndDropManager.isDragging() && dragAndDropManager.isHoveringOverTrash(touchX, touchY, trashCanBounds)) {
             game.batch.draw(trashCanHover, trashCanBounds.x, trashCanBounds.y, trashCanBounds.width,
                     trashCanBounds.height);
@@ -168,6 +181,8 @@ public class MainGameScreen implements Screen {
                     trashCanBounds.height);
         }
         game.batch.draw(BottomBar, 0, 0, Gdx.graphics.getWidth(), 150);
+
+        game.batch.draw(PauseButtonInactive, a.x, a.y, a.getWidth(), a.getHeight());
 
         game.batch.draw(accomodationicon, accomodationbounds.x, accomodationbounds.y, accomodationbounds.getWidth(),
                 accomodationbounds.getHeight());
@@ -217,12 +232,15 @@ public class MainGameScreen implements Screen {
             // Optionally draw a "Paused" label
             game.batch.begin();
             BitmapFont pauseFont = new BitmapFont();
+            pauseFont.getData().setScale(2f);
             GlyphLayout pauseLayout = new GlyphLayout(pauseFont, "Paused");
             pauseFont.draw(game.batch, pauseLayout, Gdx.graphics.getWidth() / 2 - pauseLayout.width / 2,
                     Gdx.graphics.getHeight() / 2 + pauseLayout.height / 2);
+            game.batch.draw(PauseButtonActive, a.x, a.y, a.getWidth(), a.getHeight());
             game.batch.end();
         }
 
+        //Pause or unpause the game when escape button is pressed
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             ispaused = !ispaused;
         }

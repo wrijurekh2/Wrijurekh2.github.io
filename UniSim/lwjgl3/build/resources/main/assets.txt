@@ -1,6 +1,11 @@
 BACKGROUND.jpg
 blackFnt.fnt
 blackFnt.png
+BOTTOM_BAR.png
+BUILDING1.png
+BUILDING2.png
+BUILDING3.png
+BUILDING4.png
 Crang.ttf
 EXIT_BUTTON_ACTIVE.png
 EXIT_BUTTON_INACTIVE.png
@@ -33,3 +38,5 @@ skin/uiskin.json
 skin/uiskin.png
 START_BUTTON_ACTIVE.png
 START_BUTTON_INACTIVE.png
+TRASH_CAN_HOVER.png
+TRASH_CAN_IDLE.png
