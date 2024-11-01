@@ -41,6 +41,10 @@ public class MainGameScreen implements Screen {
     private Rectangle librarybounds;
     private Rectangle cafeteriabounds;
     private Rectangle recreationalhubbounds;
+    private int accomodationcount = 3;
+    private int librarycount = 3;
+    private int cafeteriacount = 3;
+    private int recreationalhubcount = 3;
     Rectangle trashCanBounds;
 
     public MainGameScreen(Main game) {
@@ -109,14 +113,18 @@ public class MainGameScreen implements Screen {
                     // Check if we're selecting an existing building to reposition
                     if (!dragAndDropManager.selectPlacedBuilding(touchX, touchY)) {
                         // Check for icons in bottom bar to start dragging a new building
-                        if (accomodationbounds.contains(touchX, touchY)) {
+                        if (accomodationbounds.contains(touchX, touchY) && accomodationcount > 0) {
                             dragAndDropManager.startDrag("accomodation", accomodationicon, touchX, touchY);
-                        } else if (librarybounds.contains(touchX, touchY)) {
+                            accomodationcount--;
+                        } else if (librarybounds.contains(touchX, touchY) && librarycount > 0) {
                             dragAndDropManager.startDrag("library", Libraryicon, touchX, touchY);
-                        } else if (cafeteriabounds.contains(touchX, touchY)) {
+                            librarycount--;
+                        } else if (cafeteriabounds.contains(touchX, touchY) && cafeteriacount > 0) {
                             dragAndDropManager.startDrag("cafeteria", cafeteriaicon, touchX, touchY);
-                        } else if (recreationalhubbounds.contains(touchX, touchY)) {
+                            cafeteriacount--;
+                        } else if (recreationalhubbounds.contains(touchX, touchY) && recreationalhubcount > 0) {
                             dragAndDropManager.startDrag("recreationalhub", recreationalhubicon, touchX, touchY);
+                            recreationalhubcount--;
                         }
                     }
                 } else {
@@ -151,6 +159,7 @@ public class MainGameScreen implements Screen {
         hudcamera.update();
         game.batch.setProjectionMatrix(hudcamera.combined);
         game.batch.begin();
+
         if (dragAndDropManager.isDragging() && dragAndDropManager.isHoveringOverTrash(touchX, touchY, trashCanBounds)) {
             game.batch.draw(trashCanHover, trashCanBounds.x, trashCanBounds.y, trashCanBounds.width,
                     trashCanBounds.height);
@@ -159,14 +168,23 @@ public class MainGameScreen implements Screen {
                     trashCanBounds.height);
         }
         game.batch.draw(BottomBar, 0, 0, Gdx.graphics.getWidth(), 150);
+
         game.batch.draw(accomodationicon, accomodationbounds.x, accomodationbounds.y, accomodationbounds.getWidth(),
                 accomodationbounds.getHeight());
+        timeFont.draw(game.batch, "x" + accomodationcount, accomodationbounds.x + 100, accomodationbounds.y + 20);
+
         game.batch.draw(Libraryicon, librarybounds.x, librarybounds.y, librarybounds.getWidth(),
                 librarybounds.getHeight());
+        timeFont.draw(game.batch, "x" + librarycount, librarybounds.x + 100, librarybounds.y + 20);
+
         game.batch.draw(cafeteriaicon, cafeteriabounds.x, cafeteriabounds.y, cafeteriabounds.getWidth(),
                 cafeteriabounds.getHeight());
+        timeFont.draw(game.batch, "x" + cafeteriacount, cafeteriabounds.x + 100, cafeteriabounds.y + 20);
+
         game.batch.draw(recreationalhubicon, recreationalhubbounds.x, recreationalhubbounds.y,
                 recreationalhubbounds.getWidth(), recreationalhubbounds.getHeight());
+        timeFont.draw(game.batch, "x" + recreationalhubcount, recreationalhubbounds.x + 100,
+                recreationalhubbounds.y + 20);
 
         // Draw the dragged building if dragging
         dragAndDropManager.drawDraggedBuilding(game.batch);
