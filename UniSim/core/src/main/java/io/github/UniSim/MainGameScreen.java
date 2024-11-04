@@ -16,15 +16,20 @@ public class MainGameScreen implements Screen {
     Texture MAPV2;
     OrthographicCamera camera;
     OrthographicCamera hudcamera;
-    public boolean ispaused = false;
+    public boolean ispaused;
+    private boolean add = false;
+    private int start = 0;
 
     Main game;
     private DragAndDropManager dragAndDropManager;
 
-    BitmapFont timeFont;
+    BitmapFont WFont;
+    BitmapFont BFont;
     TimerClass timer;
+    MoneyClass money;
+    ReputationClass reputation;
     Texture accomodationicon;
-    Texture Libraryicon;
+    Texture libraryicon;
     Texture cafeteriaicon;
     Texture recreationalhubicon;
     Texture inventory;
@@ -40,42 +45,52 @@ public class MainGameScreen implements Screen {
     private Rectangle librarybounds;
     private Rectangle cafeteriabounds;
     private Rectangle recreationalhubbounds;
-    private Rectangle a;
+    private Rectangle pausebounds;
     private int accomodationcount = 3;
     private int librarycount = 3;
     private int cafeteriacount = 3;
     private int recreationalhubcount = 3;
+
+    private int accPlaced = 0;
+    private int libPlaced = 0;
+    private int cafePlaced = 0;
+    private int recPlaced = 0;
+
     Rectangle trashCanBounds;
 
     //Initialises the main game
     public MainGameScreen(Main game) {
         this.game = game;
-        timeFont = new BitmapFont(Gdx.files.internal("score.fnt"));
+        WFont = new BitmapFont(Gdx.files.internal("score.fnt"));
+        BFont = new BitmapFont(Gdx.files.internal("blackFnt.fnt"));
     }
 
     @Override
     public void show() {
         //Sets all the textures
         timer = new TimerClass(5); //Starts the timer (5 minutes)
+        money = new MoneyClass(10000);
+        reputation = new ReputationClass(90);
+
         MAPV2 = new Texture("MAPV2.gif");
         inventory = new Texture("INVENTORY.png");
         PauseButtonActive = new Texture("PAUSE_BUTTON_ACTIVE.png");
         PauseButtonInactive = new Texture("PAUSE_BUTTON_INACTIVE.png");
         BottomBar = new Texture("BOTTOM_BAR.png");
         cafeteriaicon = new Texture("BUILDING1.png");
-        Libraryicon = new Texture("BUILDING2.png");
+        libraryicon = new Texture("BUILDING2.png");
         recreationalhubicon = new Texture("BUILDING3.png");
         accomodationicon = new Texture("BUILDING4.png");
         trashCanIdle = new Texture("TRASH_CAN_IDLE.png");
         trashCanHover = new Texture("TRASH_CAN_HOVER.png");
 
         // Define icon bounds
-        accomodationbounds = new Rectangle(50, 10, 128, 128);
-        librarybounds = new Rectangle(300, 10, 128, 128);
-        cafeteriabounds = new Rectangle(550, 10, 128, 128);
-        recreationalhubbounds = new Rectangle(800, 10, 128, 128);
-        a = new Rectangle(850, 810, 137, 37);
-        trashCanBounds = new Rectangle(10, Gdx.graphics.getHeight() - 54, 64, 64);
+        accomodationbounds = new Rectangle(35, 10, 128, 128);
+        librarybounds = new Rectangle(270, 10, 128, 128);
+        cafeteriabounds = new Rectangle(520, 10, 128, 128);
+        recreationalhubbounds = new Rectangle(765, 10, 128, 128);
+        pausebounds = new Rectangle(850, 810, 137, 37);
+        trashCanBounds = new Rectangle(900, 150, 64, 64);
 
         // Initialise cameras
         camera = new OrthographicCamera(980, 864);
@@ -99,7 +114,7 @@ public class MainGameScreen implements Screen {
 
         //If the pause button is clicked it will pause/unpause the game
         if (Gdx.input.justTouched()){
-            if(a.contains(touchX,touchY)){
+            if(pausebounds.contains(touchX,touchY)){
                 ispaused = !ispaused;
             }
         }
@@ -124,18 +139,30 @@ public class MainGameScreen implements Screen {
                     // Check if we're selecting an existing building to reposition
                     if (!dragAndDropManager.selectPlacedBuilding(touchX, touchY)) {
                         // Check for icons in bottom bar to start dragging a new building
-                        if (accomodationbounds.contains(touchX, touchY) && accomodationcount > 0) {
+                        if (accomodationbounds.contains(touchX, touchY) && accomodationcount > 0 && money.getMoney() >= 1000) {
                             dragAndDropManager.startDrag("accomodation", accomodationicon, touchX, touchY);
                             accomodationcount--;
-                        } else if (librarybounds.contains(touchX, touchY) && librarycount > 0) {
-                            dragAndDropManager.startDrag("library", Libraryicon, touchX, touchY);
+                            accPlaced++;
+                            money.remMoney(1000);
+                            reputation.addRep(5);
+                        } else if (librarybounds.contains(touchX, touchY) && librarycount > 0 && money.getMoney() >= 1500) {
+                            dragAndDropManager.startDrag("library", libraryicon, touchX, touchY);
                             librarycount--;
-                        } else if (cafeteriabounds.contains(touchX, touchY) && cafeteriacount > 0) {
+                            libPlaced++;
+                            money.remMoney(1500);
+                            reputation.addRep(10);
+                        } else if (cafeteriabounds.contains(touchX, touchY) && cafeteriacount > 0 && money.getMoney() >= 2500) {
                             dragAndDropManager.startDrag("cafeteria", cafeteriaicon, touchX, touchY);
                             cafeteriacount--;
-                        } else if (recreationalhubbounds.contains(touchX, touchY) && recreationalhubcount > 0) {
+                            cafePlaced++;
+                            money.remMoney(2500);
+                            reputation.addRep(10);
+                        } else if (recreationalhubbounds.contains(touchX, touchY) && recreationalhubcount > 0 && money.getMoney() >= 3000) {
                             dragAndDropManager.startDrag("recreationalhub", recreationalhubicon, touchX, touchY);
                             recreationalhubcount--;
+                            recPlaced++;
+                            money.remMoney(3000);
+                            reputation.addRep(15);
                         }
                     }
                 }else {
@@ -149,6 +176,35 @@ public class MainGameScreen implements Screen {
 
                 // Check if released over the trash can
                 if (dragAndDropManager.isHoveringOverTrash(touchX, touchY, trashCanBounds)) {
+                    if(dragAndDropManager.selectedTexture == accomodationicon){
+                        accPlaced--;
+                        accomodationcount++;
+                        money.addMoney(200);
+                        reputation.remRep(10);
+                        System.out.println("acc");
+                    }
+                    else if (dragAndDropManager.selectedTexture == libraryicon){
+                        libPlaced--;
+                        librarycount++;
+                        money.addMoney(375);
+                        reputation.remRep(15);
+                        System.out.println("lib");
+                    }
+                    else if (dragAndDropManager.selectedTexture == cafeteriaicon){
+                        cafePlaced--;
+                        cafeteriacount++;
+                        money.addMoney(625);
+                        reputation.remRep(15);
+                        System.out.println("caf");
+                    }
+                    else if (dragAndDropManager.selectedTexture == recreationalhubicon){
+                        recPlaced--;
+                        recreationalhubcount++;
+                        money.addMoney(750);
+                        reputation.remRep(20);
+                        System.out.println("rec");
+                    }
+                    
                     dragAndDropManager.canceldrag(); // Discard the building
                 } else {
                     dragAndDropManager.stopDrag(); // Place the building on the map
@@ -158,6 +214,28 @@ public class MainGameScreen implements Screen {
         } else {
             timer.pause(); //Pause the timer
         }
+
+        int sec = timer.getSecRem();
+
+        //Decrease reputation every 15 seconds
+        if(sec % 15 == 0 && add == false && sec != 0){
+            reputation.remRep(10);
+             //Add money based on amount of buildings and their type every 30 seconds 
+            if(sec % 30 == 0 && add == false){
+                money.addMoney((500 * accPlaced) + (600 * libPlaced) + (750 * cafePlaced) + (900 * recPlaced));
+                reputation.addRep((2 * accPlaced) + (3 * libPlaced) + (4 * cafePlaced) + (5 * recPlaced));
+                //Add constant amount of money every year
+                if(sec % 60 == 0 && add == false){
+                    money.addMoney(2000);
+                }
+            }
+            add = true;
+        }
+        //Makes sure that the increase/decrease isn't performed multiple times but only once
+        if (sec % 15 != 0){
+            add = false;
+        }
+
 
         // Render the main game world using the main camera
         game.batch.setProjectionMatrix(camera.combined);
@@ -182,37 +260,67 @@ public class MainGameScreen implements Screen {
         }
         game.batch.draw(BottomBar, 0, 0, Gdx.graphics.getWidth(), 150);
 
-        game.batch.draw(PauseButtonInactive, a.x, a.y, a.getWidth(), a.getHeight());
+        game.batch.draw(PauseButtonInactive, pausebounds.x, pausebounds.y, pausebounds.getWidth(), pausebounds.getHeight());
 
         game.batch.draw(accomodationicon, accomodationbounds.x, accomodationbounds.y, accomodationbounds.getWidth(),
                 accomodationbounds.getHeight());
-        timeFont.draw(game.batch, "x" + accomodationcount, accomodationbounds.x + 100, accomodationbounds.y + 20);
+        BFont.draw(game.batch, "x" + accomodationcount, accomodationbounds.x + 135, accomodationbounds.y + 30);
 
-        game.batch.draw(Libraryicon, librarybounds.x, librarybounds.y, librarybounds.getWidth(),
+        game.batch.draw(libraryicon, librarybounds.x, librarybounds.y, librarybounds.getWidth(),
                 librarybounds.getHeight());
-        timeFont.draw(game.batch, "x" + librarycount, librarybounds.x + 100, librarybounds.y + 20);
+        BFont.draw(game.batch, "x" + librarycount, librarybounds.x + 135, librarybounds.y + 30);
 
         game.batch.draw(cafeteriaicon, cafeteriabounds.x, cafeteriabounds.y, cafeteriabounds.getWidth(),
                 cafeteriabounds.getHeight());
-        timeFont.draw(game.batch, "x" + cafeteriacount, cafeteriabounds.x + 100, cafeteriabounds.y + 20);
+        BFont.draw(game.batch, "x" + cafeteriacount, cafeteriabounds.x + 135, cafeteriabounds.y + 30);
 
         game.batch.draw(recreationalhubicon, recreationalhubbounds.x, recreationalhubbounds.y,
                 recreationalhubbounds.getWidth(), recreationalhubbounds.getHeight());
-        timeFont.draw(game.batch, "x" + recreationalhubcount, recreationalhubbounds.x + 100,
-                recreationalhubbounds.y + 20);
+        BFont.draw(game.batch, "x" + recreationalhubcount, recreationalhubbounds.x + 135,
+                recreationalhubbounds.y + 30);
+
+        //UI of the amount of each buidlings placed so far
+
+        game.batch.draw(accomodationicon, 10, 160, accomodationbounds.getWidth() - 50,
+                accomodationbounds.getHeight() - 50);
+        WFont.draw(game.batch, "x" + accPlaced, 110, 200);
+
+        game.batch.draw(libraryicon, 10, 260, librarybounds.getWidth() - 50,
+                librarybounds.getHeight() - 50);
+        WFont.draw(game.batch, "x" + libPlaced, 110, 300);
+
+        game.batch.draw(cafeteriaicon, 10, 360, cafeteriabounds.getWidth() - 50,
+                cafeteriabounds.getHeight() - 50);
+        WFont.draw(game.batch, "x" + cafePlaced, 110, 400);
+
+        game.batch.draw(recreationalhubicon, 10, 460, recreationalhubbounds.getWidth() - 50,
+                recreationalhubbounds.getHeight() - 50);
+        WFont.draw(game.batch, "x" + recPlaced, 110, 500);
 
         // Draw the dragged building if dragging
         dragAndDropManager.drawDraggedBuilding(game.batch);
 
         // Display timer and other HUD elements
-        GlyphLayout RealTimeLayout = new GlyphLayout(timeFont, timer.updateRealTime());
-        timeFont.draw(game.batch, RealTimeLayout, Gdx.graphics.getWidth() / 2 - RealTimeLayout.width / 2 - 120,
+        GlyphLayout RealTimeLayout = new GlyphLayout(WFont, timer.updateRealTime());
+        WFont.draw(game.batch, RealTimeLayout, Gdx.graphics.getWidth() / 2 - RealTimeLayout.width / 2 - 120,
                 Gdx.graphics.getHeight() - RealTimeLayout.height - 2);
 
-        GlyphLayout GameTimeLayout = new GlyphLayout(timeFont,
+        GlyphLayout GameTimeLayout = new GlyphLayout(WFont,
                 "Y:" + timer.getGameYear() + " M:" + timer.getGameMonth());
-        timeFont.draw(game.batch, GameTimeLayout, Gdx.graphics.getWidth() / 2 - GameTimeLayout.width / 2 + 120,
+        WFont.draw(game.batch, GameTimeLayout, Gdx.graphics.getWidth() / 2 - GameTimeLayout.width / 2 + 120,
                 Gdx.graphics.getHeight() - GameTimeLayout.height - 2);
+
+        GlyphLayout MRLabelLayout = new GlyphLayout(WFont, "Money:\nRep:");
+        WFont.draw(game.batch, MRLabelLayout, Gdx.graphics.getWidth() / 2 - MRLabelLayout.width / 2 - 380,
+        Gdx.graphics.getHeight() - MRLabelLayout.height - 2 - 50);
+
+        GlyphLayout MoneyLayout = new GlyphLayout(WFont, "" + money.getMoney());
+        WFont.draw(game.batch, MoneyLayout, Gdx.graphics.getWidth() / 2 - MoneyLayout.width / 2 - 200,
+        Gdx.graphics.getHeight() - MoneyLayout.height - 2 - 83);
+
+        GlyphLayout RepLayout = new GlyphLayout(WFont, "" + reputation.getRep());
+        WFont.draw(game.batch, RepLayout, Gdx.graphics.getWidth() / 2 - RepLayout.width / 2 - 295,
+        Gdx.graphics.getHeight() - RepLayout.height - 2 - 118);
 
         game.batch.end();
 
@@ -236,12 +344,18 @@ public class MainGameScreen implements Screen {
             GlyphLayout pauseLayout = new GlyphLayout(pauseFont, "Paused");
             pauseFont.draw(game.batch, pauseLayout, Gdx.graphics.getWidth() / 2 - pauseLayout.width / 2,
                     Gdx.graphics.getHeight() / 2 + pauseLayout.height / 2);
-            game.batch.draw(PauseButtonActive, a.x, a.y, a.getWidth(), a.getHeight());
+            game.batch.draw(PauseButtonActive, pausebounds.x, pausebounds.y, pausebounds.getWidth(), pausebounds.getHeight());
             game.batch.end();
         }
 
         //Pause or unpause the game when escape button is pressed
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+            ispaused = !ispaused;
+        }
+
+        //Starts the game in the paused state
+        if(start == 0){
+            start++;
             ispaused = !ispaused;
         }
     }

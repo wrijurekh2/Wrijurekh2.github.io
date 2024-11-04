@@ -52,4 +52,8 @@ public class TimerClass {
         int currGameMonth = (timePassed / 5) % 12;
         return (int) currGameMonth;
     }
+
+    public int getSecRem(){
+        return (int) currRealTime;
+    }
 }

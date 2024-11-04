@@ -16,7 +16,7 @@ public class DragAndDropManager {
     private boolean isrepositioning = true;
     private String selectedBuilding = null;
     private float dragX, dragY;
-    private Texture selectedTexture = null;
+    public Texture selectedTexture = null;
     private OrthographicCamera camera;
     private ArrayList<PlacedBuilding> placedBuildings = new ArrayList<PlacedBuilding>();
 
@@ -48,7 +48,6 @@ public class DragAndDropManager {
     }
 
     public boolean selectPlacedBuilding(float touchX, float touchY) {
-
         Vector3 worldpos = new Vector3(touchX, Gdx.graphics.getHeight() - touchY, 0);
         camera.unproject(worldpos);
 
@@ -57,7 +56,6 @@ public class DragAndDropManager {
 
         for (int i = 0; i < placedBuildings.size(); i++) {
             PlacedBuilding building = placedBuildings.get(i);
-
             float buildingX = building.x - building.texture.getWidth() / 2;
             float buildingY = building.y - building.texture.getHeight() / 2;
             float buildingWidth = building.texture.getWidth();
@@ -122,7 +120,6 @@ public class DragAndDropManager {
 
     public void drawDraggedBuilding(SpriteBatch batch) {
         if (isDragging && selectedTexture != null) {
-
             batch.setColor(1, 1, 1, 0.5f); // Set transparency to 50%
             batch.draw(selectedTexture, dragX - selectedTexture.getWidth() / 2,
                     dragY - selectedTexture.getHeight() / 2); // Adjust for center
