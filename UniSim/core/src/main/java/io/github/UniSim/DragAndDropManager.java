@@ -1,6 +1,7 @@
 package io.github.UniSim;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -100,6 +101,11 @@ public class DragAndDropManager {
 
     }
 
+    public java.util.List<PlacedBuilding> getplacedBuildings() {
+        return Collections.unmodifiableList(placedBuildings);
+
+    }
+
     public void canceldrag() {
         isDragging = false;
         isrepositioning = false;
@@ -127,15 +133,30 @@ public class DragAndDropManager {
         }
     }
 
-    private static class PlacedBuilding {
+    public static class PlacedBuilding {
         Texture texture;
         float x, y;
+        Rectangle bounds;
 
-        PlacedBuilding(Texture texture, float x, float y) {
+        public PlacedBuilding(Texture texture, float x, float y) {
             this.texture = texture;
             this.x = x;
             this.y = y;
+            this.bounds = new Rectangle(x - texture.getWidth() / 2, y - texture.getHeight() / 2, texture.getWidth(),
+                    texture.getHeight());
         }
+    }
+
+    public float getDragX() {
+        return dragX;
+    }
+
+    public float getDragY() {
+        return dragY;
+    }
+
+    public Texture getSelectedTexture() {
+        return selectedTexture;
     }
 
 }

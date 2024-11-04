@@ -7,14 +7,15 @@ public class TimerClass {
     private int seconds;
     private boolean ispaused;
 
-    //Initialises the timer
+    // Initialises the timer
     public TimerClass(int minutes) {
         this.seconds = minutes * 60;
         ispaused = false;
         startTime = System.currentTimeMillis();
     }
 
-    //Calculates the time passed since the start of the timer and adds onto the desired gameplay time creating a countdown effect
+    // Calculates the time passed since the start of the timer and adds onto the
+    // desired gameplay time creating a countdown effect
     public String updateRealTime() {
         if (!ispaused) {
             currRealTime = seconds + (startTime - System.currentTimeMillis()) / 1000;
@@ -23,7 +24,7 @@ public class TimerClass {
         return output;
     }
 
-    //Pauses the game and saves the time of when it occured
+    // Pauses the game and saves the time of when it occured
     public void pause() {
         if (!ispaused) {
             pauseTime = System.currentTimeMillis();
@@ -31,7 +32,8 @@ public class TimerClass {
         }
     }
 
-    //Resumes the timer by adding onto the current timer the time difference between pause and resume
+    // Resumes the timer by adding onto the current timer the time difference
+    // between pause and resume
     public void resume() {
         if (ispaused) {
             startTime += System.currentTimeMillis() - pauseTime;
@@ -39,21 +41,26 @@ public class TimerClass {
         }
     }
 
-    //Getter method for the year in-game
+    // check if the alloted time is up
+    public boolean isTimeUp() {
+        return currRealTime <= 0;
+    }
+
+    // Getter method for the year in-game
     public int getGameYear() {
         int timePassed = (int) (seconds - currRealTime);
         int currGameYear = timePassed / 60;
         return (int) currGameYear;
     }
 
-    //Getter method for the month in-game
+    // Getter method for the month in-game
     public int getGameMonth() {
         int timePassed = (int) (seconds - currRealTime);
         int currGameMonth = (timePassed / 5) % 12;
         return (int) currGameMonth;
     }
 
-    public int getSecRem(){
+    public int getSecRem() {
         return (int) currRealTime;
     }
 }

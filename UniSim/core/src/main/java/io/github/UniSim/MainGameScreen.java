@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
+import io.github.UniSim.DragAndDropManager.PlacedBuilding;
+
 public class MainGameScreen implements Screen {
     public static final float speed = 120;
     Texture MAPV2;
@@ -58,7 +60,7 @@ public class MainGameScreen implements Screen {
 
     Rectangle trashCanBounds;
 
-    //Initialises the main game
+    // Initialises the main game
     public MainGameScreen(Main game) {
         this.game = game;
         WFont = new BitmapFont(Gdx.files.internal("score.fnt"));
@@ -67,8 +69,8 @@ public class MainGameScreen implements Screen {
 
     @Override
     public void show() {
-        //Sets all the textures
-        timer = new TimerClass(5); //Starts the timer (5 minutes)
+        // Sets all the textures
+        timer = new TimerClass(5); // Starts the timer (5 minutes)
         money = new MoneyClass(10000);
         reputation = new ReputationClass(90);
 
@@ -108,18 +110,18 @@ public class MainGameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //Records the mouse location
+        // Records the mouse location
         float touchX = Gdx.input.getX();
         float touchY = Gdx.graphics.getHeight() - Gdx.input.getY();
 
-        //If the pause button is clicked it will pause/unpause the game
-        if (Gdx.input.justTouched()){
-            if(pausebounds.contains(touchX,touchY)){
+        // If the pause button is clicked it will pause/unpause the game
+        if (Gdx.input.justTouched()) {
+            if (pausebounds.contains(touchX, touchY)) {
                 ispaused = !ispaused;
             }
         }
 
-        if (!ispaused) { //Game resumes
+        if (!ispaused) { // Game resumes
             camera.update();
             timer.resume();
 
@@ -133,31 +135,35 @@ public class MainGameScreen implements Screen {
             if (Gdx.input.isKeyPressed(Keys.RIGHT))
                 camera.translate(1f, 0);
 
-            //Handle all mouse inputs for the buildings
+            // Handle all mouse inputs for the buildings
             if (Gdx.input.isTouched()) {
                 if (!dragAndDropManager.isDragging()) {
                     // Check if we're selecting an existing building to reposition
                     if (!dragAndDropManager.selectPlacedBuilding(touchX, touchY)) {
                         // Check for icons in bottom bar to start dragging a new building
-                        if (accomodationbounds.contains(touchX, touchY) && accomodationcount > 0 && money.getMoney() >= 1000) {
+                        if (accomodationbounds.contains(touchX, touchY) && accomodationcount > 0
+                                && money.getMoney() >= 1000) {
                             dragAndDropManager.startDrag("accomodation", accomodationicon, touchX, touchY);
                             accomodationcount--;
                             accPlaced++;
                             money.remMoney(1000);
                             reputation.addRep(5);
-                        } else if (librarybounds.contains(touchX, touchY) && librarycount > 0 && money.getMoney() >= 1500) {
+                        } else if (librarybounds.contains(touchX, touchY) && librarycount > 0
+                                && money.getMoney() >= 1500) {
                             dragAndDropManager.startDrag("library", libraryicon, touchX, touchY);
                             librarycount--;
                             libPlaced++;
                             money.remMoney(1500);
                             reputation.addRep(10);
-                        } else if (cafeteriabounds.contains(touchX, touchY) && cafeteriacount > 0 && money.getMoney() >= 2500) {
+                        } else if (cafeteriabounds.contains(touchX, touchY) && cafeteriacount > 0
+                                && money.getMoney() >= 2500) {
                             dragAndDropManager.startDrag("cafeteria", cafeteriaicon, touchX, touchY);
                             cafeteriacount--;
                             cafePlaced++;
                             money.remMoney(2500);
                             reputation.addRep(10);
-                        } else if (recreationalhubbounds.contains(touchX, touchY) && recreationalhubcount > 0 && money.getMoney() >= 3000) {
+                        } else if (recreationalhubbounds.contains(touchX, touchY) && recreationalhubcount > 0
+                                && money.getMoney() >= 3000) {
                             dragAndDropManager.startDrag("recreationalhub", recreationalhubicon, touchX, touchY);
                             recreationalhubcount--;
                             recPlaced++;
@@ -165,7 +171,7 @@ public class MainGameScreen implements Screen {
                             reputation.addRep(15);
                         }
                     }
-                }else {
+                } else {
                     // Update drag position
                     dragAndDropManager.updateDragPosition(touchX, touchY);
 
@@ -176,66 +182,94 @@ public class MainGameScreen implements Screen {
 
                 // Check if released over the trash can
                 if (dragAndDropManager.isHoveringOverTrash(touchX, touchY, trashCanBounds)) {
-                    if(dragAndDropManager.selectedTexture == accomodationicon){
+                    if (dragAndDropManager.selectedTexture == accomodationicon) {
                         accPlaced--;
                         accomodationcount++;
                         money.addMoney(200);
                         reputation.remRep(10);
                         System.out.println("acc");
-                    }
-                    else if (dragAndDropManager.selectedTexture == libraryicon){
+                    } else if (dragAndDropManager.selectedTexture == libraryicon) {
                         libPlaced--;
                         librarycount++;
                         money.addMoney(375);
                         reputation.remRep(15);
                         System.out.println("lib");
-                    }
-                    else if (dragAndDropManager.selectedTexture == cafeteriaicon){
+                    } else if (dragAndDropManager.selectedTexture == cafeteriaicon) {
                         cafePlaced--;
                         cafeteriacount++;
                         money.addMoney(625);
                         reputation.remRep(15);
                         System.out.println("caf");
-                    }
-                    else if (dragAndDropManager.selectedTexture == recreationalhubicon){
+                    } else if (dragAndDropManager.selectedTexture == recreationalhubicon) {
                         recPlaced--;
                         recreationalhubcount++;
                         money.addMoney(750);
                         reputation.remRep(20);
                         System.out.println("rec");
                     }
-                    
+
                     dragAndDropManager.canceldrag(); // Discard the building
-                } else {
+                } else if (!isOverlapping(dragAndDropManager.getDragX(), dragAndDropManager.getDragY(),
+                        dragAndDropManager.getSelectedTexture())) {
                     dragAndDropManager.stopDrag(); // Place the building on the map
+                } else {
+
+                    if (dragAndDropManager.selectedTexture == accomodationicon) {
+                        accPlaced--;
+                        accomodationcount++;
+                        money.addMoney(1000);
+                        reputation.remRep(5);
+                        System.out.println("acc");
+                    } else if (dragAndDropManager.selectedTexture == libraryicon) {
+                        libPlaced--;
+                        librarycount++;
+                        money.addMoney(1500);
+                        reputation.remRep(10);
+                        System.out.println("lib");
+                    } else if (dragAndDropManager.selectedTexture == cafeteriaicon) {
+                        cafePlaced--;
+                        cafeteriacount++;
+                        money.addMoney(2500);
+                        reputation.remRep(10);
+                        System.out.println("caf");
+                    } else if (dragAndDropManager.selectedTexture == recreationalhubicon) {
+                        recPlaced--;
+                        recreationalhubcount++;
+                        money.addMoney(3000);
+                        reputation.remRep(15);
+                        System.out.println("rec");
+                    }
+
+                    dragAndDropManager.canceldrag();
+
                 }
             }
 
         } else {
-            timer.pause(); //Pause the timer
+            timer.pause(); // Pause the timer
         }
 
         int sec = timer.getSecRem();
 
-        //Decrease reputation every 15 seconds
-        if(sec % 15 == 0 && add == false && sec != 0){
+        // Decrease reputation every 15 seconds
+        if (sec % 15 == 0 && add == false && sec != 0) {
             reputation.remRep(10);
-             //Add money based on amount of buildings and their type every 30 seconds 
-            if(sec % 30 == 0 && add == false){
+            // Add money based on amount of buildings and their type every 30 seconds
+            if (sec % 30 == 0 && add == false) {
                 money.addMoney((500 * accPlaced) + (600 * libPlaced) + (750 * cafePlaced) + (900 * recPlaced));
                 reputation.addRep((2 * accPlaced) + (3 * libPlaced) + (4 * cafePlaced) + (5 * recPlaced));
-                //Add constant amount of money every year
-                if(sec % 60 == 0 && add == false){
+                // Add constant amount of money every year
+                if (sec % 60 == 0 && add == false) {
                     money.addMoney(2000);
                 }
             }
             add = true;
         }
-        //Makes sure that the increase/decrease isn't performed multiple times but only once
-        if (sec % 15 != 0){
+        // Makes sure that the increase/decrease isn't performed multiple times but only
+        // once
+        if (sec % 15 != 0) {
             add = false;
         }
-
 
         // Render the main game world using the main camera
         game.batch.setProjectionMatrix(camera.combined);
@@ -250,7 +284,7 @@ public class MainGameScreen implements Screen {
         game.batch.setProjectionMatrix(hudcamera.combined);
         game.batch.begin();
 
-        //UI implementation
+        // UI implementation
         if (dragAndDropManager.isDragging() && dragAndDropManager.isHoveringOverTrash(touchX, touchY, trashCanBounds)) {
             game.batch.draw(trashCanHover, trashCanBounds.x, trashCanBounds.y, trashCanBounds.width,
                     trashCanBounds.height);
@@ -260,7 +294,8 @@ public class MainGameScreen implements Screen {
         }
         game.batch.draw(BottomBar, 0, 0, Gdx.graphics.getWidth(), 150);
 
-        game.batch.draw(PauseButtonInactive, pausebounds.x, pausebounds.y, pausebounds.getWidth(), pausebounds.getHeight());
+        game.batch.draw(PauseButtonInactive, pausebounds.x, pausebounds.y, pausebounds.getWidth(),
+                pausebounds.getHeight());
 
         game.batch.draw(accomodationicon, accomodationbounds.x, accomodationbounds.y, accomodationbounds.getWidth(),
                 accomodationbounds.getHeight());
@@ -279,7 +314,7 @@ public class MainGameScreen implements Screen {
         BFont.draw(game.batch, "x" + recreationalhubcount, recreationalhubbounds.x + 135,
                 recreationalhubbounds.y + 30);
 
-        //UI of the amount of each buidlings placed so far
+        // UI of the amount of each buidlings placed so far
 
         game.batch.draw(accomodationicon, 10, 160, accomodationbounds.getWidth() - 50,
                 accomodationbounds.getHeight() - 50);
@@ -312,15 +347,15 @@ public class MainGameScreen implements Screen {
 
         GlyphLayout MRLabelLayout = new GlyphLayout(WFont, "Money:\nRep:");
         WFont.draw(game.batch, MRLabelLayout, Gdx.graphics.getWidth() / 2 - MRLabelLayout.width / 2 - 380,
-        Gdx.graphics.getHeight() - MRLabelLayout.height - 2 - 50);
+                Gdx.graphics.getHeight() - MRLabelLayout.height - 2 - 50);
 
         GlyphLayout MoneyLayout = new GlyphLayout(WFont, "" + money.getMoney());
         WFont.draw(game.batch, MoneyLayout, Gdx.graphics.getWidth() / 2 - MoneyLayout.width / 2 - 200,
-        Gdx.graphics.getHeight() - MoneyLayout.height - 2 - 83);
+                Gdx.graphics.getHeight() - MoneyLayout.height - 2 - 83);
 
         GlyphLayout RepLayout = new GlyphLayout(WFont, "" + reputation.getRep());
         WFont.draw(game.batch, RepLayout, Gdx.graphics.getWidth() / 2 - RepLayout.width / 2 - 295,
-        Gdx.graphics.getHeight() - RepLayout.height - 2 - 118);
+                Gdx.graphics.getHeight() - RepLayout.height - 2 - 118);
 
         game.batch.end();
 
@@ -344,20 +379,42 @@ public class MainGameScreen implements Screen {
             GlyphLayout pauseLayout = new GlyphLayout(pauseFont, "Paused");
             pauseFont.draw(game.batch, pauseLayout, Gdx.graphics.getWidth() / 2 - pauseLayout.width / 2,
                     Gdx.graphics.getHeight() / 2 + pauseLayout.height / 2);
-            game.batch.draw(PauseButtonActive, pausebounds.x, pausebounds.y, pausebounds.getWidth(), pausebounds.getHeight());
+            game.batch.draw(PauseButtonActive, pausebounds.x, pausebounds.y, pausebounds.getWidth(),
+                    pausebounds.getHeight());
             game.batch.end();
         }
 
-        //Pause or unpause the game when escape button is pressed
+        // Pause or unpause the game when escape button is pressed
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             ispaused = !ispaused;
         }
 
-        //Starts the game in the paused state
-        if(start == 0){
+        // Starts the game in the paused state
+        if (start == 0) {
             start++;
             ispaused = !ispaused;
         }
+
+        if (timer.isTimeUp()) {
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+            return;
+
+        }
+    }
+
+    private boolean isOverlapping(float x, float y, Texture buildingTexture) {
+        Rectangle newBuildingBounds = new Rectangle(x - buildingTexture.getWidth() / 2,
+                y - buildingTexture.getHeight() / 2,
+                buildingTexture.getWidth(), buildingTexture.getHeight());
+
+        // Check for overlaps with all existing placed buildings
+        for (PlacedBuilding placedBuilding : dragAndDropManager.getplacedBuildings()) {
+            if (newBuildingBounds.overlaps(placedBuilding.bounds)) {
+                return true; // Overlap detected
+            }
+        }
+        return false; // No overlap
     }
 
     @Override
