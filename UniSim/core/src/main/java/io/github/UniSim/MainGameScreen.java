@@ -38,7 +38,6 @@ public class MainGameScreen implements Screen {
     Texture libraryicon;
     Texture cafeteriaicon;
     Texture recreationalhubicon;
-    Texture inventory;
     Texture PauseButtonActive;
     Texture PauseButtonInactive;
     Texture BottomBar;
@@ -79,7 +78,6 @@ public class MainGameScreen implements Screen {
         reputation = new ReputationClass(90);
 
         MAPV2 = new Texture("MAPV2.gif");
-        inventory = new Texture("INVENTORY.png");
         PauseButtonActive = new Texture("PAUSE_BUTTON_ACTIVE.png");
         PauseButtonInactive = new Texture("PAUSE_BUTTON_INACTIVE.png");
         BottomBar = new Texture("BOTTOM_BAR.png");
