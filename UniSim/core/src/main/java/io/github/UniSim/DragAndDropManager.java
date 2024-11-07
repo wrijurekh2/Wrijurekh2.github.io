@@ -9,13 +9,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
 
 public class DragAndDropManager {
     private boolean isDragging = false;
-    private boolean isrepositioning = true;
-    private String selectedBuilding = null;
     private float dragX, dragY;
     public Texture selectedTexture = null;
     private OrthographicCamera camera;
@@ -27,7 +23,6 @@ public class DragAndDropManager {
 
     public void startDrag(String buildingType, Texture buildingTexture, float touchX, float touchY) {
         isDragging = true;
-        selectedBuilding = buildingType;
         selectedTexture = buildingTexture;
 
         Vector3 worldPos = new Vector3(touchX, touchY, 0);
@@ -65,7 +60,6 @@ public class DragAndDropManager {
             if (worldtouchX >= buildingX && worldtouchX <= buildingX + buildingWidth && worldtouchY >= buildingY
                     && worldtouchY <= buildingY + buildingHeight) {
                 isDragging = true;
-                isrepositioning = true;
                 selectedTexture = building.texture;
                 dragX = building.x;
                 dragY = building.y;
@@ -73,7 +67,6 @@ public class DragAndDropManager {
                 placedBuildings.remove(i);
                 return true;
             }
-
         }
         return false;
     }
@@ -95,8 +88,6 @@ public class DragAndDropManager {
             placedBuildings.add(new PlacedBuilding(selectedTexture, finalworldpos.x, finalworldpos.y));
         }
         isDragging = false;
-        isrepositioning = false;
-        selectedBuilding = null;
         selectedTexture = null;
 
     }
@@ -108,8 +99,6 @@ public class DragAndDropManager {
 
     public void canceldrag() {
         isDragging = false;
-        isrepositioning = false;
-        selectedBuilding = null;
         selectedTexture = null;
     }
 

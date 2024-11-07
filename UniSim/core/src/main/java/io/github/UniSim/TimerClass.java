@@ -41,7 +41,7 @@ public class TimerClass {
         }
     }
 
-    // check if the alloted time is up
+    // Checks if the alloted time is up
     public boolean isTimeUp() {
         return currRealTime <= 0;
     }
@@ -60,6 +60,7 @@ public class TimerClass {
         return (int) currGameMonth;
     }
 
+    // Gets the remaining time left (seconds)
     public int getSecRem() {
         return (int) currRealTime;
     }

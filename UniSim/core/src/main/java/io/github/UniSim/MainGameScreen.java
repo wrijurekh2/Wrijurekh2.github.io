@@ -1,5 +1,8 @@
 package io.github.UniSim;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -21,6 +24,7 @@ public class MainGameScreen implements Screen {
     public boolean ispaused;
     private boolean add = false;
     private int start = 0;
+    private boolean popup = false;
 
     Main game;
     private DragAndDropManager dragAndDropManager;
@@ -141,34 +145,46 @@ public class MainGameScreen implements Screen {
                     // Check if we're selecting an existing building to reposition
                     if (!dragAndDropManager.selectPlacedBuilding(touchX, touchY)) {
                         // Check for icons in bottom bar to start dragging a new building
-                        if (accomodationbounds.contains(touchX, touchY) && accomodationcount > 0
-                                && money.getMoney() >= 1000) {
-                            dragAndDropManager.startDrag("accomodation", accomodationicon, touchX, touchY);
-                            accomodationcount--;
-                            accPlaced++;
-                            money.remMoney(1000);
-                            reputation.addRep(5);
-                        } else if (librarybounds.contains(touchX, touchY) && librarycount > 0
-                                && money.getMoney() >= 1500) {
-                            dragAndDropManager.startDrag("library", libraryicon, touchX, touchY);
-                            librarycount--;
-                            libPlaced++;
-                            money.remMoney(1500);
-                            reputation.addRep(10);
-                        } else if (cafeteriabounds.contains(touchX, touchY) && cafeteriacount > 0
-                                && money.getMoney() >= 2500) {
-                            dragAndDropManager.startDrag("cafeteria", cafeteriaicon, touchX, touchY);
-                            cafeteriacount--;
-                            cafePlaced++;
-                            money.remMoney(2500);
-                            reputation.addRep(10);
-                        } else if (recreationalhubbounds.contains(touchX, touchY) && recreationalhubcount > 0
-                                && money.getMoney() >= 3000) {
-                            dragAndDropManager.startDrag("recreationalhub", recreationalhubicon, touchX, touchY);
-                            recreationalhubcount--;
-                            recPlaced++;
-                            money.remMoney(3000);
-                            reputation.addRep(15);
+                        if (accomodationbounds.contains(touchX, touchY) && accomodationcount > 0) {
+                            if (money.getMoney() >= 1000) {
+                                dragAndDropManager.startDrag("accomodation", accomodationicon, touchX, touchY);
+                                accomodationcount--;
+                                accPlaced++;
+                                money.remMoney(1000);
+                                reputation.addRep(5);
+                            } else {
+                                popup("You need " + (1000 - money.getMoney()) + " more to afford this!");
+                            }
+                        } else if (librarybounds.contains(touchX, touchY) && librarycount > 0) {
+                            if (money.getMoney() >= 1500) {
+                                dragAndDropManager.startDrag("library", libraryicon, touchX, touchY);
+                                librarycount--;
+                                libPlaced++;
+                                money.remMoney(1500);
+                                reputation.addRep(10);
+                            } else {
+                                popup("You need " + (1500 - money.getMoney()) + " more to afford this!");
+                            }
+                        } else if (cafeteriabounds.contains(touchX, touchY) && cafeteriacount > 0) {
+                            if (money.getMoney() >= 2500) {
+                                dragAndDropManager.startDrag("cafeteria", cafeteriaicon, touchX, touchY);
+                                cafeteriacount--;
+                                cafePlaced++;
+                                money.remMoney(2500);
+                                reputation.addRep(10);
+                            } else {
+                                popup("You need " + (2500 - money.getMoney()) + " more to afford this!");
+                            }
+                        } else if (recreationalhubbounds.contains(touchX, touchY) && recreationalhubcount > 0) {
+                            if (money.getMoney() >= 3000) {
+                                dragAndDropManager.startDrag("recreationalhub", recreationalhubicon, touchX, touchY);
+                                recreationalhubcount--;
+                                recPlaced++;
+                                money.remMoney(3000);
+                                reputation.addRep(15);
+                            } else {
+                                popup("You need " + (3000 - money.getMoney()) + " more to afford this!");
+                            }
                         }
                     }
                 } else {
@@ -213,7 +229,6 @@ public class MainGameScreen implements Screen {
                         dragAndDropManager.getSelectedTexture())) {
                     dragAndDropManager.stopDrag(); // Place the building on the map
                 } else {
-
                     if (dragAndDropManager.selectedTexture == accomodationicon) {
                         accPlaced--;
                         accomodationcount++;
@@ -396,10 +411,11 @@ public class MainGameScreen implements Screen {
         }
 
         if (timer.isTimeUp()) {
-            game.setScreen(new GameOverScreen(game));
+            GameOverScreen gameover = new GameOverScreen(game);
+            gameover.retrieveData(accPlaced, libPlaced, cafePlaced, recPlaced);
+            game.setScreen(gameover);
             dispose();
             return;
-
         }
     }
 
@@ -435,5 +451,27 @@ public class MainGameScreen implements Screen {
 
     @Override
     public void dispose() {
+    }
+
+    private void popup(String text) {
+        if (popup == false) {
+            popup = true;
+            final JFrame parent = new JFrame();
+            JButton button = new JButton();
+
+            button.setText(text);
+            parent.add(button);
+            parent.pack();
+            parent.setBounds(Gdx.graphics.getWidth() / 2 + 150, Gdx.graphics.getHeight() / 2 - 100, 300, 150);
+            parent.setVisible(true);
+
+            button.addActionListener(new java.awt.event.ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    popup = false;
+                    parent.dispose();
+                }
+            });
+        }
     }
 }
