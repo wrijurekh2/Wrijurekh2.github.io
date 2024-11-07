@@ -153,7 +153,7 @@ public class MainGameScreen implements Screen {
                                 money.remMoney(1000);
                                 reputation.addRep(5);
                             } else {
-                                popup("You need " + (1000 - money.getMoney()) + " more to afford this!");
+                                popup("You need " + (1000 - money.getMoney()) + " more to afford this!"); //Creates a popup to tell the user that not enough money to buy
                             }
                         } else if (librarybounds.contains(touchX, touchY) && librarycount > 0) {
                             if (money.getMoney() >= 1500) {
@@ -190,38 +190,35 @@ public class MainGameScreen implements Screen {
                 } else {
                     // Update drag position
                     dragAndDropManager.updateDragPosition(touchX, touchY);
-
-                    // Check if the dragged building is hovering over the trash can
-
                 }
-            } else if (dragAndDropManager.isDragging()) {
-
+            } else if (dragAndDropManager.isDragging()) 
+            {
                 // Check if released over the trash can
                 if (dragAndDropManager.isHoveringOverTrash(touchX, touchY, trashCanBounds)) {
                     if (dragAndDropManager.selectedTexture == accomodationicon) {
-                        accPlaced--;
-                        accomodationcount++;
-                        money.addMoney(200);
-                        reputation.remRep(10);
-                        System.out.println("acc");
+                        accPlaced--; //Update amount of buildings placed
+                        accomodationcount++; //Update limit of buildings
+                        money.addMoney(200); //Add money
+                        reputation.remRep(10); //Remove reputation
+                        //System.out.println("acc");
                     } else if (dragAndDropManager.selectedTexture == libraryicon) {
                         libPlaced--;
                         librarycount++;
                         money.addMoney(375);
                         reputation.remRep(15);
-                        System.out.println("lib");
+                        //System.out.println("lib");
                     } else if (dragAndDropManager.selectedTexture == cafeteriaicon) {
                         cafePlaced--;
                         cafeteriacount++;
                         money.addMoney(625);
                         reputation.remRep(15);
-                        System.out.println("caf");
+                        //System.out.println("caf");
                     } else if (dragAndDropManager.selectedTexture == recreationalhubicon) {
                         recPlaced--;
                         recreationalhubcount++;
                         money.addMoney(750);
                         reputation.remRep(20);
-                        System.out.println("rec");
+                        //System.out.println("rec");
                     }
 
                     dragAndDropManager.canceldrag(); // Discard the building
@@ -230,29 +227,29 @@ public class MainGameScreen implements Screen {
                     dragAndDropManager.stopDrag(); // Place the building on the map
                 } else {
                     if (dragAndDropManager.selectedTexture == accomodationicon) {
-                        accPlaced--;
-                        accomodationcount++;
-                        money.addMoney(1000);
-                        reputation.remRep(5);
-                        System.out.println("acc");
+                        accPlaced--; //Update amount of buildings placed
+                        accomodationcount++; //Update limit of buildings
+                        money.addMoney(1000); //Add money
+                        reputation.remRep(5); //Remove reputation
+                        //System.out.println("acc");
                     } else if (dragAndDropManager.selectedTexture == libraryicon) {
                         libPlaced--;
                         librarycount++;
                         money.addMoney(1500);
                         reputation.remRep(10);
-                        System.out.println("lib");
+                        //System.out.println("lib");
                     } else if (dragAndDropManager.selectedTexture == cafeteriaicon) {
                         cafePlaced--;
                         cafeteriacount++;
                         money.addMoney(2500);
                         reputation.remRep(10);
-                        System.out.println("caf");
+                        //System.out.println("caf");
                     } else if (dragAndDropManager.selectedTexture == recreationalhubicon) {
                         recPlaced--;
                         recreationalhubcount++;
                         money.addMoney(3000);
                         reputation.remRep(15);
-                        System.out.println("rec");
+                        //System.out.println("rec");
                     }
 
                     dragAndDropManager.canceldrag();
@@ -264,7 +261,7 @@ public class MainGameScreen implements Screen {
             timer.pause(); // Pause the timer
         }
 
-        int sec = timer.getSecRem();
+        int sec = timer.getSecRem(); //Gets the amount of time remaining in seconds
 
         // Decrease reputation every 15 seconds
         if (sec % 15 == 0 && add == false && sec != 0) {
@@ -280,8 +277,7 @@ public class MainGameScreen implements Screen {
             }
             add = true;
         }
-        // Makes sure that the increase/decrease isn't performed multiple times but only
-        // once
+        // Makes sure that the increase/decrease isn't performed multiple times
         if (sec % 15 != 0) {
             add = false;
         }
@@ -410,6 +406,7 @@ public class MainGameScreen implements Screen {
             ispaused = !ispaused;
         }
 
+        //Once the game is over the screen is changed with your game stats
         if (timer.isTimeUp()) {
             GameOverScreen gameover = new GameOverScreen(game);
             gameover.retrieveData(accPlaced, libPlaced, cafePlaced, recPlaced);
@@ -453,6 +450,7 @@ public class MainGameScreen implements Screen {
     public void dispose() {
     }
 
+    //Popup with custom text to display any important info to the user
     private void popup(String text) {
         if (popup == false) {
             popup = true;

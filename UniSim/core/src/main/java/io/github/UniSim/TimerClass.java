@@ -9,7 +9,8 @@ public class TimerClass {
 
     // Initialises the timer
     public TimerClass(int minutes) {
-        this.seconds = minutes * 60;
+        //this.seconds = minutes * 60;
+        this.seconds = 40;
         ispaused = false;
         startTime = System.currentTimeMillis();
     }

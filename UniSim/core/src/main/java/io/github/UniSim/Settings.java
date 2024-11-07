@@ -51,14 +51,14 @@ public class Settings implements Screen {
                 checked = !checked;
             }
         }
-        // Add implementation of muting music
+        // Adds an option for an implementation of muting music
         if (!checked) {
             game.batch.draw(CheckInactive, 400, 270);
         } else {
             game.batch.draw(CheckActive, 400, 270);
         }
 
-        // Label
+        // Mute Label
         GlyphLayout RealTimeLayout = new GlyphLayout(BFont, "MUTE");
         BFont.draw(game.batch, RealTimeLayout, 500, 300);
 

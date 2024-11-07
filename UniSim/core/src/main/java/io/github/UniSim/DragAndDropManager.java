@@ -30,7 +30,7 @@ public class DragAndDropManager {
         dragX = touchX;
         dragY = touchY;
 
-        System.out.println("Dragging started for " + buildingType);
+        //System.out.println("Dragging started for " + buildingType);
     }
 
     public void updateDragPosition(float touchX, float touchY) {
@@ -39,7 +39,6 @@ public class DragAndDropManager {
             camera.unproject(worldPos);
             dragX = (worldPos.x) - (camera.position.x - camera.viewportWidth / 2);
             dragY = (Gdx.graphics.getHeight() - worldPos.y) + camera.position.y - camera.viewportHeight / 2;
-
         }
     }
 
@@ -72,8 +71,6 @@ public class DragAndDropManager {
     }
 
     public boolean isHoveringOverTrash(float touchX, float touchY, Rectangle trashCanBounds) {
-        // Vector3 screenPos = camera.project(new Vector3(dragX, dragY, 0));
-
         // Check if the unprojected position overlaps with the trash can bounds
         return trashCanBounds.contains(touchX, touchY);
     }
@@ -94,7 +91,6 @@ public class DragAndDropManager {
 
     public java.util.List<PlacedBuilding> getplacedBuildings() {
         return Collections.unmodifiableList(placedBuildings);
-
     }
 
     public void canceldrag() {
@@ -147,5 +143,4 @@ public class DragAndDropManager {
     public Texture getSelectedTexture() {
         return selectedTexture;
     }
-
 }

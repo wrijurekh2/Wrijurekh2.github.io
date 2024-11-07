@@ -36,9 +36,10 @@ public class GameOverScreen implements Screen {
 
     public GameOverScreen(Main game) {
         this.game = game;
+        //Set the font
         BFont = new BitmapFont(Gdx.files.internal("blackFnt.fnt"));
-        background = new Texture("BACKGROUND.jpg");
         // Sets all the textures
+        background = new Texture("BACKGROUND.jpg");
         mainbuttonactive = new Texture("MAIN_BUTTON_ACTIVE.png");
         mainbuttoninactive = new Texture("MAIN_BUTTON_INACTIVE.png");
         exitbuttonactive = new Texture("EXIT_BUTTON_ACTIVE2.png");
@@ -51,6 +52,7 @@ public class GameOverScreen implements Screen {
         recreationalhubicon = new Texture("BUILDING3.png");
         accomodationicon = new Texture("BUILDING4.png");
 
+        //Set the icon bounds
         accomodationbounds = new Rectangle(35, 10, 128, 128);
         librarybounds = new Rectangle(270, 10, 128, 128);
         cafeteriabounds = new Rectangle(520, 10, 128, 128);
@@ -145,6 +147,8 @@ public class GameOverScreen implements Screen {
         BFont.dispose();
     }
 
+    //Retrieves the data from this screen
+    //Used to have current stats on game over screen
     public void retrieveData(int accPlaced, int libPlaced, int cafePlaced, int recPlaced) {
         this.accPlaced = accPlaced;
         this.libPlaced = libPlaced;
