@@ -56,6 +56,7 @@ HOW_BUTTON_INACTIVE.png
 InstructionScreen.class
 InstructionScreen.java
 INVENTORY.png
+Karma Future.otf
 libgdx.png
 m1.png
 Main.class
@@ -71,6 +72,7 @@ PAUSE_BUTTON_ACTIVE.png
 PAUSE_BUTTON_INACTIVE.png
 PLAY_BUTTON_ACTIVE.png
 PLAY_BUTTON_INACTIVE.png
+Preview.png
 RETRY_BUTTON_ACTIVE.png
 RETRY_BUTTON_INACTIVE.png
 RETURN_BUTTON_ACTIVE.png
@@ -81,5 +83,7 @@ skin/default.fnt
 skin/uiskin.atlas
 skin/uiskin.json
 skin/uiskin.png
+START_BUTTON_ACTIVE.png
+START_BUTTON_INACTIVE.png
 TRASH_CAN_HOVER.png
 TRASH_CAN_IDLE.png
