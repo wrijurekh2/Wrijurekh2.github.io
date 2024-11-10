@@ -48,8 +48,8 @@ public class MainGameScreen implements Screen {
     Texture BottomBar;
     Texture trashCanIdle;
     Texture trashCanHover;
-    //Texture MAPV4;
-    //Texture MAPV4_MASK;
+    Texture hideGridActive;
+    Texture showGridInactive;
 
     float cameraX;
     float cameraY;
@@ -58,6 +58,7 @@ public class MainGameScreen implements Screen {
     private Rectangle cafeteriabounds;
     private Rectangle recreationalhubbounds;
     private Rectangle pausebounds;
+    private Rectangle gridBtnbounds;
     private int accomodationcount = 3;
     private int librarycount = 3;
     private int cafeteriacount = 3;
@@ -94,8 +95,8 @@ public class MainGameScreen implements Screen {
     public void show() {
         // Sets all the textures
         timer = new TimerClass(5); // Starts the timer (5 minutes)
-        money = new MoneyClass(10000);
-        reputation = new ReputationClass(90);
+        money = new MoneyClass(8000);
+        reputation = new ReputationClass(50);
 
         PauseButtonActive = new Texture("PAUSE_BUTTON_ACTIVE.png");
         PauseButtonInactive = new Texture("PAUSE_BUTTON_INACTIVE.png");
@@ -106,6 +107,8 @@ public class MainGameScreen implements Screen {
         accomodationicon = new Texture("BUILDING4.png");
         trashCanIdle = new Texture("TRASH_CAN_IDLE.png");
         trashCanHover = new Texture("TRASH_CAN_HOVER.png");
+        showGridInactive = new Texture("SHOW_GRID_INACTIVE.png");
+        hideGridActive = new Texture("HIDE_GRID_ACTIVE.png");
 
         // Define icon bounds
         accomodationbounds = new Rectangle(35, 10, 128, 128);
@@ -113,6 +116,7 @@ public class MainGameScreen implements Screen {
         cafeteriabounds = new Rectangle(520, 10, 128, 128);
         recreationalhubbounds = new Rectangle(765, 10, 128, 128);
         pausebounds = new Rectangle(850, 810, 137, 37);
+        gridBtnbounds = new Rectangle(0, 810, 137, 37);
         trashCanBounds = new Rectangle(900, 150, 64, 64);
 
         // Initialise cameras
@@ -138,6 +142,7 @@ public class MainGameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //Setup the renderer
         renderer.setView(camera);
         renderer.render();
   
@@ -153,11 +158,19 @@ public class MainGameScreen implements Screen {
         }
 
         if (!ispaused) { // Game resumes
-            camera.update();
-            timer.resume();
+            camera.update(); // Update camera
+            timer.resume(); // Resume timer
 
+            //Displays/hides the area where buildings cannot be placed on right mouse click
             if (Gdx.input.isButtonJustPressed(1)){
                 displayBounds = !displayBounds;
+            }
+
+            //If the grid button is clicked it will display/hide the non-placeable areas
+            if (Gdx.input.justTouched()) {
+                if(gridBtnbounds.contains(touchX, touchY)){
+                    displayBounds = !displayBounds;
+                }
             }
 
             // Handle camera movement
@@ -173,15 +186,17 @@ public class MainGameScreen implements Screen {
             // Handle all mouse inputs for the buildings
             if (Gdx.input.isTouched()) {
                 if (!dragAndDropManager.isDragging()) {
+                    //When a building on the map is dragged its original position is recorded
                     if (dragAndDropManager.selectPlacedBuilding(touchX, touchY)) {
-                        originalX = dragAndDropManager.getDragX();
-                        originalY = dragAndDropManager.getDragY();
-                        System.out.println("uh: " + originalX + ", " + originalY);
+                        Vector3 worldpos = new Vector3(touchX, Gdx.graphics.getHeight() - touchY, 0);
+                        camera.unproject(worldpos);
+                        originalX = worldpos.x;
+                        originalY = worldpos.y;
+                        System.out.println("drag: " + originalX + ", " + originalY);
                         isrepositioning = true;
                     }
                     // Check if we're selecting an existing building to reposition
                     if (!dragAndDropManager.selectPlacedBuilding(touchX, touchY)) {
-
                         // Check for icons in bottom bar to start dragging a new building
                         if (accomodationbounds.contains(touchX, touchY) && accomodationcount > 0) {
                             if (money.getMoney() >= 1000) {
@@ -231,84 +246,74 @@ public class MainGameScreen implements Screen {
                     dragAndDropManager.updateDragPosition(touchX, touchY);
                 }
             } else if (dragAndDropManager.isDragging()) {
-                // Check if released over the trash can
+                // Check if building is released over the trash can
                 if (dragAndDropManager.isHoveringOverTrash(touchX, touchY, trashCanBounds)) {
                     if (dragAndDropManager.getSelectedTexture() == accomodationicon) {
                         accPlaced--; // Update amount of buildings placed
                         accomodationcount++; // Update limit of buildings
-                        money.addMoney(200); // Add money
-                        reputation.remRep(10); // Remove reputation
-                        // System.out.println("acc");
+                        money.addMoney(200); // Add money (25% of original value)
+                        reputation.remRep(10); // Remove reputation (+5 from original gain)
                     } else if (dragAndDropManager.getSelectedTexture() == libraryicon) {
                         libPlaced--;
                         librarycount++;
                         money.addMoney(375);
                         reputation.remRep(15);
-                        // System.out.println("lib");
                     } else if (dragAndDropManager.getSelectedTexture() == cafeteriaicon) {
                         cafePlaced--;
                         cafeteriacount++;
                         money.addMoney(625);
                         reputation.remRep(15);
-                        // System.out.println("caf");
                     } else if (dragAndDropManager.getSelectedTexture() == recreationalhubicon) {
                         recPlaced--;
                         recreationalhubcount++;
                         money.addMoney(750);
                         reputation.remRep(20);
-                        // System.out.println("rec");
                     }
 
                     dragAndDropManager.canceldrag(); // Discard the building
-                    isrepositioning = false;
+
+                  // Places the desired building onto the map
                 } else if (!isOverlapping(dragAndDropManager.getDragX(), dragAndDropManager.getDragY(),
                     dragAndDropManager.getSelectedTexture()) && isPlaceable(touchX, touchY) == true) {
-                    dragAndDropManager.stopDrag(); // Place the building on the map
+                    //System.out.println("placed: dragx: " + dragAndDropManager.getDragX() + ", dragY: " + dragAndDropManager.getDragY());
+                
+                    dragAndDropManager.stopDrag(); // Place the building onto the mapLayer
                     isrepositioning = false;
 
+                  // Returns building back to its original position if it overlaps another building
                 } else if (isrepositioning) {
                     // If overlapping while repositioning, revert to original position
-                    dragAndDropManager.updateDragPosition(originalX, originalY); // Move back to original
-                    dragAndDropManager.stopDrag(); // Stop dragging action
+                    dragAndDropManager.stopDragorig(originalX, originalY);
                     isrepositioning = false;
-                    //The building is in an not allowed position on the tilemap
-                    //So a message is displayed to inform the user
-                    if (!isPlaceable(touchX, touchY)){
-                        popup("The building cannot be placed there!");
-                    }
+                    popup("The building cannot be placed there!");
                 }
 
                 else {
+                    //If can't place building after buying it, it reverts the changes made
                     if (dragAndDropManager.getSelectedTexture() == accomodationicon) {
                         accPlaced--; // Update amount of buildings placed
                         accomodationcount++; // Update limit of buildings
                         money.addMoney(1000); // Add money
                         reputation.remRep(5); // Remove reputation
-                        // System.out.println("acc");
                     } else if (dragAndDropManager.getSelectedTexture() == libraryicon) {
                         libPlaced--;
                         librarycount++;
                         money.addMoney(1500);
                         reputation.remRep(10);
-                        // System.out.println("lib");
                     } else if (dragAndDropManager.getSelectedTexture() == cafeteriaicon) {
                         cafePlaced--;
                         cafeteriacount++;
                         money.addMoney(2500);
                         reputation.remRep(10);
-                        // System.out.println("caf");
                     } else if (dragAndDropManager.getSelectedTexture() == recreationalhubicon) {
                         recPlaced--;
                         recreationalhubcount++;
                         money.addMoney(3000);
                         reputation.remRep(15);
-                        // System.out.println("rec");
                     }
-                    //The building is in an not allowed position on the tilemap
-                    //So a message is displayed to inform the user
-                    if (!isPlaceable(touchX, touchY)){
-                        popup("The building cannot be placed there!");
-                    }
+                    //Displays a message to the user that the building can't be placed
+                    //in that position on the map
+                    popup("The building cannot be placed there!");
                     dragAndDropManager.canceldrag();
                 }
             }
@@ -324,11 +329,11 @@ public class MainGameScreen implements Screen {
             reputation.remRep(10);
             // Add money based on amount of buildings and their type every 30 seconds
             if (sec % 30 == 0 && add == false) {
-                money.addMoney((500 * accPlaced) + (600 * libPlaced) + (750 * cafePlaced) + (900 * recPlaced));
-                reputation.addRep((2 * accPlaced) + (3 * libPlaced) + (4 * cafePlaced) + (5 * recPlaced));
+                money.addMoney((150 * accPlaced) + (300 * libPlaced) + (500 * cafePlaced) + (600 * recPlaced));
+                reputation.addRep((accPlaced) + (libPlaced) + (2 * cafePlaced) + (30 * recPlaced));
                 // Add constant amount of money every year
                 if (sec % 60 == 0 && add == false) {
-                    money.addMoney(2000);
+                    money.addMoney(1500);
                 }
             }
             add = true;
@@ -423,9 +428,18 @@ public class MainGameScreen implements Screen {
         WFont.draw(game.batch, RepLayout, Gdx.graphics.getWidth() / 2 - RepLayout.width / 2 - 295,
                 Gdx.graphics.getHeight() - RepLayout.height - 2 - 118);
 
+        if (displayBounds){
+            game.batch.draw(hideGridActive, gridBtnbounds.x, gridBtnbounds.y, gridBtnbounds.getWidth(),
+                gridBtnbounds.getHeight());
+        }
+        else{
+            game.batch.draw(showGridInactive, gridBtnbounds.x, gridBtnbounds.y, gridBtnbounds.getWidth(),
+                gridBtnbounds.getHeight());
+        }
+
         game.batch.end();
 
-        // Draw pause overlay if paused
+        // Draw pause overlay when paused
         if (ispaused) {
             ShapeRenderer shapeRenderer = new ShapeRenderer();
             shapeRenderer.setProjectionMatrix(hudcamera.combined);
@@ -438,7 +452,7 @@ public class MainGameScreen implements Screen {
             Gdx.gl.glDisable(GL20.GL_BLEND);
             shapeRenderer.dispose();
 
-            // Optionally draw a "Paused" label
+            // Display "Paused" at the centre of the screen
             game.batch.begin();
             BitmapFont pauseFont = new BitmapFont();
             pauseFont.getData().setScale(2f);
@@ -450,26 +464,32 @@ public class MainGameScreen implements Screen {
             game.batch.end();
         }
 
-        // Pause or unpause the game when escape button is pressed
+        // Pause/unpause the game when escape button is pressed
         if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
             ispaused = !ispaused;
         }
 
-        // Starts the game in the paused state
+        // Starts the game in a paused state
         if (start == 0) {
             start++;
             ispaused = !ispaused;
         }
 
-        // Once the game is over the screen is changed with your game stats
+        // Once the game is over a 'game over' screen is displayed with your game stats
         if (timer.isTimeUp()) {
+            //Add 1 sec before end of game
+            //Ensures that the game always doesn't end on the player losing as they had less than 100 reputation
+            reputation.addRep((accPlaced) + (libPlaced) + (2 * cafePlaced) + (3 * recPlaced));
+
+            //Sets the screen to the post game screen
             GameOverScreen gameover = new GameOverScreen(game);
-            gameover.retrieveData(accPlaced, libPlaced, cafePlaced, recPlaced);
+            gameover.retrieveData(accPlaced, libPlaced, cafePlaced, recPlaced); //Gets the display data
             game.setScreen(gameover);
             dispose();
             return;
         }
 
+        //Display/Hide the tilemap bounds
         if(displayBounds == true){
             boundLayer.setOpacity(0.40f);
         }
@@ -478,6 +498,7 @@ public class MainGameScreen implements Screen {
         }
     }
 
+    //Check if a building is overlapping another one
     private boolean isOverlapping(float x, float y, Texture buildingTexture) {
         Rectangle newBuildingBounds = new Rectangle(x - buildingTexture.getWidth() / 2,
                 y - buildingTexture.getHeight() / 2,
@@ -492,32 +513,14 @@ public class MainGameScreen implements Screen {
         return false; // No overlap
     }
 
-    @Override
-    public void resize(int width, int height) {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void dispose() {
-    }
-
     // Popup with custom text to display any important info to the user
     private void popup(String text) {
         if (popup == false) {
             popup = true;
             final JFrame parent = new JFrame();
             JButton button = new JButton();
+
+            parent.setAlwaysOnTop( true ); //Makes sure the popup is always above other windows
 
             button.setText(text);
             parent.add(button);
@@ -557,7 +560,27 @@ public class MainGameScreen implements Screen {
             //System.out.println("Outside!!"); //Outside of the tilemap
         }
         //display x,y in terms of tilemap
-        System.out.println("Tile Coordinates: (" + x + ", " + y + ")");
+        //System.out.println("Tile Coordinates: (" + x + ", " + y + ")");
         return false;
+    }
+
+    @Override
+    public void resize(int width, int height) {
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void dispose() {
     }
 }

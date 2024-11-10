@@ -12,6 +12,7 @@ public class Settings implements Screen {
     Texture CheckInactive;
     Texture CheckActive;
     Texture ReturnButtonInactive;
+    Texture ReturnButtonActive;
     boolean checked = false;
     Texture header;
     BitmapFont BFont;
@@ -23,6 +24,7 @@ public class Settings implements Screen {
         CheckInactive = new Texture("CHECK_INACTIVE.png");
         CheckActive = new Texture("CHECK_ACTIVE.png");
         ReturnButtonInactive = new Texture("RETURN_BUTTON_INACTIVE.png");
+        ReturnButtonActive = new Texture("RETURN_BUTTON_ACTIVE.png");
         header = new Texture("HEADER.png");
         BFont = new BitmapFont(Gdx.files.internal("blackFnt.fnt"));
     }
@@ -40,6 +42,7 @@ public class Settings implements Screen {
         game.batch.draw(ReturnButtonInactive, 850, 20);
         // Capture mouse input
         if (Gdx.input.getX() > 850 && Gdx.input.getX() < 980 && Gdx.input.getY() > 800 && Gdx.input.getY() < 900) {
+            game.batch.draw(ReturnButtonActive, 850,20);
             if (Gdx.input.justTouched()) {
                 this.dispose();
                 game.setScreen(new MainMenuScreen(game));

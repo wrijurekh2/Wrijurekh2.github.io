@@ -13,17 +13,28 @@ public class InstructionScreen implements Screen {
 
     Texture InBackground;
     Texture header;
-    Texture PauseButtonInactive;
-    Texture PauseButtonActive;
+    Texture ReturnButtonInactive;
+    Texture ReturnButtonActive;
+    Texture PrevPageActive;
+    Texture PrevPageInactive;
+    Texture NextPageActive;
+    Texture NextPageInactive;
+    Texture screenshot;
     String Instructions;
     BitmapFont Font;
+    int pageNo = 0;
 
     //Instruction screen initialisation
     public InstructionScreen(Main game) {
         this.game = game;
-        PauseButtonInactive = new Texture("PAUSE_BUTTON_INACTIVE.png");
-        PauseButtonActive = new Texture("PAUSE_BUTTON_ACTIVE.png");
+        ReturnButtonInactive = new Texture("RETURN_BUTTON_INACTIVE.png");
+        ReturnButtonActive = new Texture("RETURN_BUTTON_ACTIVE.png");
+        PrevPageActive = new Texture("PREV_PAGE_ACTIVE.png");
+        PrevPageInactive = new Texture("PREV_PAGE_INACTIVE.png");
+        NextPageActive = new Texture("NEXT_PAGE_ACTIVE.png");
+        NextPageInactive = new Texture("NEXT_PAGE_INACTIVE.png");
         header = new Texture("HEADER.png");
+        screenshot = new Texture("ScreenshotFinal.png");
         InBackground = new Texture("BACKGROUND.jpg");
         Font = new BitmapFont(Gdx.files.internal("blackFnt.fnt"));
         //Will replace with a single png image of the game instructions
@@ -46,26 +57,53 @@ public class InstructionScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);//Clears the background
         game.batch.begin();
         game.batch.draw(InBackground, 0, 0); //Creates background
-        game.batch.draw(header, 45, 580); //Creates a title
-        //Return button - new png needed
-        if (Gdx.input.getX() > 850 && Gdx.input.getX() < 980 && Gdx.input.getY() > 820 && Gdx.input.getY() < 900) {
-            game.batch.draw(PauseButtonActive, 850, 0);
+        
+        if (pageNo == 0){
+            game.batch.draw(header, 45, 580); //Creates a title
+
+            if (Gdx.input.getX() > 450 && Gdx.input.getX() < 580 && Gdx.input.getY() > 800 && Gdx.input.getY() < 900) {
+                game.batch.draw(NextPageActive, 450, 20);
+                if (Gdx.input.justTouched()) {
+                    pageNo++;
+                }
+            }
+            else{
+                game.batch.draw(NextPageInactive, 450, 20);
+            }
+
+            //Creates a layout and then using the layout to create a visible label with instructions
+            GlyphLayout TimeLayout = new GlyphLayout(Font, Instructions);
+            Font.draw(game.batch, TimeLayout, Gdx.graphics.getWidth() / 2 - TimeLayout.width / 2,
+            Gdx.graphics.getHeight() - TimeLayout.height + 100);
+
+        }
+        else if(pageNo == 1){
+            game.batch.draw(screenshot, 0, 0);
+
+            if (Gdx.input.getX() > 450 && Gdx.input.getX() < 580 && Gdx.input.getY() > 800 && Gdx.input.getY() < 900) {
+                game.batch.draw(PrevPageActive, 450, 20);
+                if (Gdx.input.justTouched()) {
+                    pageNo--;
+                }
+            }
+            else{
+                game.batch.draw(PrevPageInactive, 450, 20);
+            }
+        }
+
+        //Return button
+        if (Gdx.input.getX() > 850 && Gdx.input.getX() < 980 && Gdx.input.getY() > 800 && Gdx.input.getY() < 900) {
+            game.batch.draw(ReturnButtonActive, 850, 20);
             if (Gdx.input.justTouched()) {
                 this.dispose();
                 game.setScreen(new MainMenuScreen(game)); //Returns back to the main menu
             }
         }
         else{
-            game.batch.draw(PauseButtonInactive, 850, 0);
+            game.batch.draw(ReturnButtonInactive, 850, 20);
         }
 
-        //Creates a layout and then using the layout to create a visible label with instructions
-        GlyphLayout TimeLayout = new GlyphLayout(Font, Instructions);
-        Font.draw(game.batch, TimeLayout, Gdx.graphics.getWidth() / 2 - TimeLayout.width / 2,
-                Gdx.graphics.getHeight() - TimeLayout.height + 100);
-
         game.batch.end();
-
     }
 
     @Override
