@@ -6,11 +6,8 @@ import javax.swing.JFrame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -19,7 +16,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthoCachedTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -28,7 +24,6 @@ import io.github.UniSim.DragAndDropManager.PlacedBuilding;
 
 public class MainGameScreen implements Screen {
     public static final float speed = 120;
-    Texture MAPV2;
     OrthographicCamera camera;
     OrthographicCamera hudcamera;
     public boolean ispaused;
@@ -81,14 +76,16 @@ public class MainGameScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
     private Cell cell;
-    private TiledMapTileLayer layer;
+    private TiledMapTileLayer mapLayer;
+    private TiledMapTileLayer boundLayer;
+
+    private boolean displayBounds = false;
 
     // Initialises the main game
     public MainGameScreen(Main game) {
         this.game = game;
         WFont = new BitmapFont(Gdx.files.internal("score.fnt"));
         BFont = new BitmapFont(Gdx.files.internal("blackFnt.fnt"));
-        // only needed once
         map = new TmxMapLoader().load("map.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
     }
@@ -100,10 +97,6 @@ public class MainGameScreen implements Screen {
         money = new MoneyClass(10000);
         reputation = new ReputationClass(90);
 
-        //MAPV4 = new Texture("MAPV4.png");
-        //MAPV4_MASK = new Texture("MAPV4_MASK.png");
-
-        MAPV2 = new Texture("MAPV2.gif");
         PauseButtonActive = new Texture("PAUSE_BUTTON_ACTIVE.png");
         PauseButtonInactive = new Texture("PAUSE_BUTTON_INACTIVE.png");
         BottomBar = new Texture("BOTTOM_BAR.png");
@@ -131,6 +124,12 @@ public class MainGameScreen implements Screen {
         hudcamera.update();
 
         dragAndDropManager = new DragAndDropManager(camera);
+
+        //Get the first tilemap layer which is the visual layer of the map
+        mapLayer = (TiledMapTileLayer) map.getLayers().get(0);
+
+        //Get the second layer which contains the tiles where user can't build
+        boundLayer = (TiledMapTileLayer) map.getLayers().get(1);
     }
 
     @Override
@@ -157,27 +156,27 @@ public class MainGameScreen implements Screen {
             camera.update();
             timer.resume();
 
-            if (Gdx.input.justTouched()) {
-                tileMapCoordinates(touchX, touchY);
+            if (Gdx.input.isButtonJustPressed(1)){
+                displayBounds = !displayBounds;
             }
 
             // Handle camera movement
             if (Gdx.input.isKeyPressed(Keys.UP))
-                camera.translate(0, 5f);
+                camera.translate(0, 8f);
             if (Gdx.input.isKeyPressed(Keys.DOWN))
-                camera.translate(0, -5f);
+                camera.translate(0, -8f);
             if (Gdx.input.isKeyPressed(Keys.LEFT))
-                camera.translate(-5f, 0);
+                camera.translate(-8f, 0);
             if (Gdx.input.isKeyPressed(Keys.RIGHT))
-                camera.translate(5f, 0);
+                camera.translate(8f, 0);
 
             // Handle all mouse inputs for the buildings
             if (Gdx.input.isTouched()) {
                 if (!dragAndDropManager.isDragging()) {
-
                     if (dragAndDropManager.selectPlacedBuilding(touchX, touchY)) {
                         originalX = dragAndDropManager.getDragX();
                         originalY = dragAndDropManager.getDragY();
+                        System.out.println("uh: " + originalX + ", " + originalY);
                         isrepositioning = true;
                     }
                     // Check if we're selecting an existing building to reposition
@@ -263,8 +262,7 @@ public class MainGameScreen implements Screen {
                     dragAndDropManager.canceldrag(); // Discard the building
                     isrepositioning = false;
                 } else if (!isOverlapping(dragAndDropManager.getDragX(), dragAndDropManager.getDragY(),
-                    dragAndDropManager.getSelectedTexture())) {
-
+                    dragAndDropManager.getSelectedTexture()) && isPlaceable(touchX, touchY) == true) {
                     dragAndDropManager.stopDrag(); // Place the building on the map
                     isrepositioning = false;
 
@@ -273,6 +271,11 @@ public class MainGameScreen implements Screen {
                     dragAndDropManager.updateDragPosition(originalX, originalY); // Move back to original
                     dragAndDropManager.stopDrag(); // Stop dragging action
                     isrepositioning = false;
+                    //The building is in an not allowed position on the tilemap
+                    //So a message is displayed to inform the user
+                    if (!isPlaceable(touchX, touchY)){
+                        popup("The building cannot be placed there!");
+                    }
                 }
 
                 else {
@@ -301,7 +304,11 @@ public class MainGameScreen implements Screen {
                         reputation.remRep(15);
                         // System.out.println("rec");
                     }
-
+                    //The building is in an not allowed position on the tilemap
+                    //So a message is displayed to inform the user
+                    if (!isPlaceable(touchX, touchY)){
+                        popup("The building cannot be placed there!");
+                    }
                     dragAndDropManager.canceldrag();
                 }
             }
@@ -334,11 +341,6 @@ public class MainGameScreen implements Screen {
         // Render the main game world using the main camera
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        //game.batch.draw(MAPV2, 0, 0); // Draw the map
-        //TEST
-        //game.batch.draw(MAPV4_MASK, 0, 0);
-        
-        //TEST
 
         dragAndDropManager.drawPlacedBuildings(game.batch);
         game.batch.end();
@@ -467,6 +469,13 @@ public class MainGameScreen implements Screen {
             dispose();
             return;
         }
+
+        if(displayBounds == true){
+            boundLayer.setOpacity(0.40f);
+        }
+        else{
+            boundLayer.setOpacity(0f);
+        }
     }
 
     private boolean isOverlapping(float x, float y, Texture buildingTexture) {
@@ -526,30 +535,29 @@ public class MainGameScreen implements Screen {
         }
     }
 
-    private void tileMapCoordinates(float touchX, float touchY){
+    private boolean isPlaceable(float touchX, float touchY){
+        //Get the location of mouse on the tilemap even after moving the camera
         Vector3 worldpos = new Vector3(touchX, Gdx.graphics.getHeight() - touchY, 0);
-                    camera.unproject(worldpos);
+        camera.unproject(worldpos);
 
-                    int x = (int)(worldpos.x / 32);
-                    int y = (int)(worldpos.y / 32);
+        int x = (int)(worldpos.x / 32);
+        int y = (int)(worldpos.y / 32);
+
+        cell = mapLayer.getCell(x, y);
         
-                    // Access the tile map layer to get the cell at the calculated tile coordinates
-                    layer = (TiledMapTileLayer) map.getLayers().get(0);
-                    cell = layer.getCell(x, y);
-        
-                    // If a tile is found, check the second layer
-                    if (cell != null) {
-                        layer = (TiledMapTileLayer) map.getLayers().get(1);
-                        cell = layer.getCell(x, y);
-                        if (cell == null) {
-                            System.out.println("Yes!!");  // Tile found in second layer
-                        }
-                    }
-                    else{
-                        System.out.println("Outside!!");
-                    }
-        
-                    // Debugging output
-                    System.out.println("Tile Coordinates: (" + x + ", " + y + ")");
+        // If a tile is found, check the second layer
+        if (cell != null) {
+            cell = boundLayer.getCell(x, y);
+            //if null then a building can be placed
+            if (cell == null) {
+                return true;
+            }
+        }
+        else{
+            //System.out.println("Outside!!"); //Outside of the tilemap
+        }
+        //display x,y in terms of tilemap
+        System.out.println("Tile Coordinates: (" + x + ", " + y + ")");
+        return false;
     }
 }

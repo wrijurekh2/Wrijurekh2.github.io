@@ -8,15 +8,28 @@
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "aaa.tsx": {
+            "scaleInDock": 0.06,
+            "scaleInEditor": 1
+        },
         "c.tmx": {
             "scale": 0.125,
             "selectedLayer": 0,
             "viewCenter": {
                 "x": 812,
-                "y": 1460
+                "y": 40
+            }
+        },
+        "map.tmx": {
+            "scale": 0.1766,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2579.2751981879956,
+                "y": 1843.1483578708944
             }
         }
     },
+    "last.imagePath": "C:/Users/macie/Desktop/UniSim/assets",
     "map.height": 120,
     "map.lastUsedFormat": "tmx",
     "map.layerDataFormat": "1",
@@ -25,5 +38,8 @@
     ],
     "project": "tilemapProject.tiled-project",
     "recentFiles": [
+        "c.tmx",
+        "aaa.tsx",
+        "map.tmx"
     ]
 }

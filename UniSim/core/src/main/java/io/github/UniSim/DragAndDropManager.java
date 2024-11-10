@@ -83,6 +83,7 @@ public class DragAndDropManager {
             camera.unproject(finalworldpos);
             // Add the building's final position to the list of placed buildings
             placedBuildings.add(new PlacedBuilding(selectedTexture, finalworldpos.x, finalworldpos.y));
+            System.out.println(finalworldpos.x + "," + finalworldpos.y);
         }
         isDragging = false;
         selectedTexture = null;
@@ -133,10 +134,14 @@ public class DragAndDropManager {
     }
 
     public float getDragX() {
+        Vector3 worldpos = new Vector3(dragX, Gdx.graphics.getHeight() - dragY, 0);
+        camera.unproject(worldpos);
         return dragX;
     }
 
     public float getDragY() {
+        Vector3 worldpos = new Vector3(dragX, Gdx.graphics.getHeight() - dragY, 0);
+        camera.unproject(worldpos);
         return dragY;
     }
 
