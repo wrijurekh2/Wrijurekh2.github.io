@@ -23,6 +23,7 @@ HOW_BUTTON_ACTIVE.png
 HOW_BUTTON_INACTIVE.png
 MAIN_BUTTON_ACTIVE.png
 MAIN_BUTTON_INACTIVE.png
+map.tmx
 MAPV2.gif
 MAPV4.png
 MAPV4_MASK.png
@@ -36,6 +37,8 @@ RETURN_BUTTON_ACTIVE.png
 RETURN_BUTTON_INACTIVE.png
 score.fnt
 score.png
+tilemapProject.tiled-project
+tilemapProject.tiled-session
 TRASH_CAN_HOVER.png
 TRASH_CAN_IDLE.png
 untitled.tmx

@@ -89,7 +89,7 @@ public class MainGameScreen implements Screen {
         WFont = new BitmapFont(Gdx.files.internal("score.fnt"));
         BFont = new BitmapFont(Gdx.files.internal("blackFnt.fnt"));
         // only needed once
-        map = new TmxMapLoader().load("c.tmx");
+        map = new TmxMapLoader().load("map.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
     }
 
@@ -158,35 +158,7 @@ public class MainGameScreen implements Screen {
             timer.resume();
 
             if (Gdx.input.justTouched()) {
-                try {
-                    Vector3 worldpos = new Vector3(touchX, Gdx.graphics.getHeight() - touchY, 0);
-                    camera.unproject(worldpos);
-
-                    int x = (int)(worldpos.x / 32);
-                    int y = (int)(worldpos.y / 32);
-        
-                    // Access the tile map layer to get the cell at the calculated tile coordinates
-                    layer = (TiledMapTileLayer) map.getLayers().get(0);
-                    cell = layer.getCell(x, y);
-        
-                    // If a tile is found, check the second layer
-                    if (cell != null) {
-                        layer = (TiledMapTileLayer) map.getLayers().get(1);
-                        cell = layer.getCell(x, y);
-                        if (cell == null) {
-                            System.out.println("Yes!!");  // Tile found in second layer
-                        }
-                    }
-                    else{
-                        System.out.println("Outside!!");
-                    }
-        
-                    // Debugging output
-                    System.out.println("Tile Coordinates: (" + x + ", " + y + ")");
-                    
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                tileMapCoordinates(touchX, touchY);
             }
 
             // Handle camera movement
@@ -552,5 +524,32 @@ public class MainGameScreen implements Screen {
                 }
             });
         }
+    }
+
+    private void tileMapCoordinates(float touchX, float touchY){
+        Vector3 worldpos = new Vector3(touchX, Gdx.graphics.getHeight() - touchY, 0);
+                    camera.unproject(worldpos);
+
+                    int x = (int)(worldpos.x / 32);
+                    int y = (int)(worldpos.y / 32);
+        
+                    // Access the tile map layer to get the cell at the calculated tile coordinates
+                    layer = (TiledMapTileLayer) map.getLayers().get(0);
+                    cell = layer.getCell(x, y);
+        
+                    // If a tile is found, check the second layer
+                    if (cell != null) {
+                        layer = (TiledMapTileLayer) map.getLayers().get(1);
+                        cell = layer.getCell(x, y);
+                        if (cell == null) {
+                            System.out.println("Yes!!");  // Tile found in second layer
+                        }
+                    }
+                    else{
+                        System.out.println("Outside!!");
+                    }
+        
+                    // Debugging output
+                    System.out.println("Tile Coordinates: (" + x + ", " + y + ")");
     }
 }

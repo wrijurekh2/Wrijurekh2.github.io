@@ -1,0 +1,29 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "c.tmx": {
+            "scale": 0.125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 812,
+                "y": 1460
+            }
+        }
+    },
+    "map.height": 120,
+    "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": "1",
+    "map.width": 150,
+    "openFiles": [
+    ],
+    "project": "tilemapProject.tiled-project",
+    "recentFiles": [
+    ]
+}
