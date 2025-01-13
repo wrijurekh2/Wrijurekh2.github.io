@@ -1,0 +1,156 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Building</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim.building</a>
+</div>
+
+<h1>Coverage Summary for Class: Building (io.github.unisim.building)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Building</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim.building;
+&nbsp;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.math.Vector2;
+&nbsp;import io.github.unisim.Point;
+&nbsp;
+&nbsp;/**
+&nbsp; * Represents a building that can be placed on the map.
+&nbsp; */
+&nbsp;public class Building {
+&nbsp;  public Texture texture;
+&nbsp;  // we can save memory by storing only the top-left corner and the size of the
+&nbsp;  // building.
+&nbsp;  // This works as all buildings are rectangular.
+&nbsp;  public Point location;
+&nbsp;  public Point size;
+&nbsp;  public float textureScale;
+&nbsp;  public Vector2 textureOffset;
+&nbsp;  public boolean flipped;
+&nbsp;  public BuildingType type;
+&nbsp;  public String name;
+&nbsp;  public int cost;
+&nbsp;  public int rep;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Create a new building to display in the building menu and place in the world.
+&nbsp;   * 
+&nbsp;   * @param texture       - The image to draw over the space the building occupies
+&nbsp;   * @param textureScale  - The scale of the image compared to the source file
+&nbsp;   * @param textureOffset - The offset of the texture in grid tiles
+&nbsp;   * @param location      - The (x, y) co-ordinates of the building on the map
+&nbsp;   * @param size          - The size (width, height) of the building in map tiles
+&nbsp;   * @param flipped       - Whether to render a flipped variant of the building
+&nbsp;   * @param type          - The category of building, must be a BuildingType
+&nbsp;   * @param name          - The name of the building to display when selected
+&nbsp;   * @param cost          - The cost of the building to build
+&nbsp;   * @param rep           - The amount of reputation gained by building it
+&nbsp;   */
+&nbsp;  public Building(Texture texture, float textureScale, Vector2 textureOffset, Point location,
+<b class="fc">&nbsp;      Point size, Boolean flipped, BuildingType type, String name, int cost, int rep) {</b>
+<b class="fc">&nbsp;    this.texture = texture;</b>
+<b class="fc">&nbsp;    this.location = location;</b>
+<b class="fc">&nbsp;    this.size = size;</b>
+<b class="fc">&nbsp;    this.textureScale = textureScale;</b>
+<b class="fc">&nbsp;    this.textureOffset = textureOffset;</b>
+<b class="fc">&nbsp;    this.flipped = flipped;</b>
+<b class="fc">&nbsp;    this.type = type;</b>
+<b class="fc">&nbsp;    this.name = name;</b>
+<b class="fc">&nbsp;    this.cost = cost;</b>
+<b class="fc">&nbsp;    this.rep = rep;</b>
+<b class="fc">&nbsp;  }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

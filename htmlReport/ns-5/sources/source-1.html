@@ -1,0 +1,214 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UiInputProcessor</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim.world</a>
+</div>
+
+<h1>Coverage Summary for Class: UiInputProcessor (io.github.unisim.world)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UiInputProcessor</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim.world;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.InputProcessor;
+&nbsp;import com.badlogic.gdx.math.Vector2;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.Actor;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.Stage;
+&nbsp;import com.badlogic.gdx.utils.Array;
+&nbsp;
+&nbsp;/**
+&nbsp; * Runs before the WorldInputProcessor and handles any input events generated from the UI.
+&nbsp; */
+&nbsp;@SuppressWarnings(&quot;OuterTypeFilename&quot;)
+&nbsp;public class UiInputProcessor implements InputProcessor {
+&nbsp;  private Stage stage;
+&nbsp;
+<b class="nc">&nbsp;  public UiInputProcessor(Stage stage) {</b>
+<b class="nc">&nbsp;    this.stage = stage;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Called when a key is pressed and handles logic related to keypresses
+&nbsp;   * within UI components.
+&nbsp;
+&nbsp;   * @param keycode - The unique identifier for the Key pressed.
+&nbsp;   * 
+&nbsp;   * @return whether the event has been handled and needs to be further processed.
+&nbsp;   */
+&nbsp;  public boolean keyDown(int keycode) {
+<b class="nc">&nbsp;    return false;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean keyUp(int keycode) {
+<b class="nc">&nbsp;    return false;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean keyTyped(char character) {
+<b class="nc">&nbsp;    return false;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public boolean touchDown(int x, int y, int pointer, int button) {
+<b class="nc">&nbsp;    return validateMouseClick(x, y);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean touchUp(int x, int y, int pointer, int button) {
+<b class="nc">&nbsp;    return false;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean touchDragged(int x, int y, int pointer) {
+<b class="nc">&nbsp;    return false;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+<b class="nc">&nbsp;    return false;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean mouseMoved(int x, int y) {
+<b class="nc">&nbsp;    return false;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean scrolled(float amountX, float amountY) {
+<b class="nc">&nbsp;    return false;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Only allow a mouse click to be passed down to the next processor stage
+&nbsp;   * if and only if it occurs within a UI component.
+&nbsp;
+&nbsp;   * @param x - The x co-ordinate of the mouse pointer
+&nbsp;   * @param y - The y co-ordinate of the mouse pointer
+&nbsp;   * @return - true if the click occurred within a UI component, false otherwise
+&nbsp;   */
+&nbsp;  private boolean validateMouseClick(int x, int y) {
+&nbsp;    // determine whether the point (x, y) is within the world or UI components
+<b class="nc">&nbsp;    boolean inWorld = true;</b>
+&nbsp;    Vector2 bottomLeft;
+&nbsp;    Vector2 topRight;
+&nbsp;
+&nbsp;    // transform the y co-ordinate into the co-ordinate space we are working in
+&nbsp;    // such that (0, 0) becomes the bottom left corner.
+<b class="nc">&nbsp;    y = Gdx.graphics.getHeight() - y;</b>
+&nbsp;
+&nbsp;    // for each actor, check whether the mouse was clicked within their bounds.
+<b class="nc">&nbsp;    Array&lt;Actor&gt; actors = stage.getActors();</b>
+<b class="nc">&nbsp;    for (Actor actor : actors) {</b>
+<b class="nc">&nbsp;      bottomLeft = new Vector2(actor.getX(), actor.getY());</b>
+<b class="nc">&nbsp;      topRight = new Vector2(actor.getWidth(), actor.getHeight()).add(bottomLeft);</b>
+&nbsp;
+&nbsp;      // check if the mouse click occurred in a rectangular region
+<b class="nc">&nbsp;      if (x &gt; bottomLeft.x &amp;&amp; x &lt; topRight.x &amp;&amp; y &gt; bottomLeft.y &amp;&amp; y &lt; topRight.y) {</b>
+<b class="nc">&nbsp;        inWorld = false;</b>
+&nbsp;      }
+&nbsp;    }
+&nbsp;    // return whether the click occurred within the world or within the UI.
+<b class="nc">&nbsp;    return !inWorld;</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

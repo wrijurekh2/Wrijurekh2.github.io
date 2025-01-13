@@ -1,0 +1,269 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Leaderboard</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim</a>
+</div>
+
+<h1>Coverage Summary for Class: Leaderboard (io.github.unisim)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Leaderboard</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    22.2%
+  </span>
+  <span class="absValue">
+    (2/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    14.3%
+  </span>
+  <span class="absValue">
+    (2/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    28%
+  </span>
+  <span class="absValue">
+    (14/50)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.files.FileHandle;
+&nbsp;import com.badlogic.gdx.utils.Json;
+&nbsp;import com.badlogic.gdx.utils.JsonValue;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collections;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * A leaderboard to store, sort and display player scores
+&nbsp; */
+&nbsp;public class Leaderboard implements Json.Serializable {
+&nbsp;    private static final String LEADERBOARD_FILE = &quot;Leaderboard.txt&quot;;
+&nbsp;
+&nbsp;    private FileHandle file;
+&nbsp;    private List&lt;Score&gt; scores;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor: Initialises the leaderboard and loads player names + scores from
+&nbsp;     * the file.
+&nbsp;     * Creates a new file if the leaderboard file doesn&#39;t exist.
+&nbsp;     */
+<b class="fc">&nbsp;    public Leaderboard() {</b>
+<b class="fc">&nbsp;        Json json = new Json();</b>
+&nbsp;        try {
+<b class="fc">&nbsp;            file = Gdx.files.local(LEADERBOARD_FILE);</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            System.out.println(&quot;Creating new file due to error: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;            file = Gdx.files.local(LEADERBOARD_FILE);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        // Initialises file if it doesn&#39;t exist
+<b class="pc">&nbsp;        if (!file.exists()) {</b>
+<b class="fc">&nbsp;            file.writeString(&quot;[]&quot;, false); // Create an empty JSON array if file does not exist</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        scores = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        loadScores(json); // Load scores from the file</b>
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Finds player score based on their player namer
+&nbsp;     * 
+&nbsp;     * @param playerName - Player Name - String
+&nbsp;     * @return - Returns score of the player or null
+&nbsp;     */
+&nbsp;    private Score findScoreByPlayer(String playerName) {
+<b class="nc">&nbsp;        for (Score score : scores) {</b>
+<b class="nc">&nbsp;            if (score.getPlayerName().equalsIgnoreCase(GameState.settings.getPlayerName())) {</b>
+<b class="nc">&nbsp;                return score;</b>
+&nbsp;            }
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return null; // Null if no player score found</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adds/updates player score
+&nbsp;     * 
+&nbsp;     * @param playerName - Player Name - String
+&nbsp;     * @param points     - Player Score - Integer
+&nbsp;     */
+&nbsp;    public void addScore(String playerName, int points) {
+<b class="nc">&nbsp;        Score existingScore = findScoreByPlayer(playerName);</b>
+<b class="nc">&nbsp;        if (existingScore != null) {</b>
+&nbsp;            // Replace the score if the new one is higher
+<b class="nc">&nbsp;            if (points &gt; existingScore.getScore()) {</b>
+<b class="nc">&nbsp;                existingScore.setScore(points);</b>
+&nbsp;            }
+&nbsp;        } else {
+&nbsp;            // Add a new score if the player doesn&#39;t already exist
+<b class="nc">&nbsp;            Score newScore = new Score(playerName, points);</b>
+<b class="nc">&nbsp;            scores.add(newScore);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        Collections.sort(scores);</b>
+<b class="nc">&nbsp;        saveScores();</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns top N scores from the leaderboard
+&nbsp;     * 
+&nbsp;     * @param count - Number of scores to return - Integer
+&nbsp;     * @return - Top N scores - List
+&nbsp;     */
+&nbsp;    public List&lt;Score&gt; getTopScores(int count) {
+&nbsp;        try {
+<b class="nc">&nbsp;            return scores.subList(0, Math.min(count, scores.size()));</b>
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            file.writeString(&quot;[]&quot;, false);</b>
+<b class="nc">&nbsp;            scores = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;            return scores.subList(0, Math.min(count, scores.size()));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Saves scores to the JSON file
+&nbsp;     */
+&nbsp;    private void saveScores() {
+<b class="nc">&nbsp;        Json json = new Json();</b>
+<b class="nc">&nbsp;        file.writeString(json.toJson(scores), false);</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Loads scores from the JSON file
+&nbsp;     * 
+&nbsp;     * @param json - JSON object used for serialisation
+&nbsp;     */
+&nbsp;    @SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;    private void loadScores(Json json) {
+<b class="pc">&nbsp;        if (file.exists()) {</b>
+&nbsp;            try {
+<b class="fc">&nbsp;                String jsonString = file.readString();</b>
+<b class="fc">&nbsp;                scores = json.fromJson(ArrayList.class, Score.class, jsonString);</b>
+<b class="nc">&nbsp;            } catch (Exception e) {</b>
+<b class="nc">&nbsp;                System.out.println(&quot;Error loading scores: &quot; + e.getMessage());</b>
+<b class="nc">&nbsp;                scores = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;        }
+<b class="fc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Prints the leaderboard for debugging
+&nbsp;     */
+&nbsp;    public void printLeaderboard() {
+<b class="nc">&nbsp;        for (Score score : scores) {</b>
+<b class="nc">&nbsp;            System.out.println(score.getPlayerName() + &quot;: &quot; + score.getScore());</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Serialises the scores to JSON
+&nbsp;     * 
+&nbsp;     * @param json - JSON object used for serialisation
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public void write(Json json) {
+<b class="nc">&nbsp;        json.writeValue(&quot;scores&quot;, scores);</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Deserialises the scores from JSON
+&nbsp;     * 
+&nbsp;     * @param json     - JSON object used for serialisation
+&nbsp;     * @param jsonData - JSON value containing the data
+&nbsp;     */
+&nbsp;    @SuppressWarnings(&quot;unchecked&quot;)
+&nbsp;    @Override
+&nbsp;    public void read(Json json, JsonValue jsonData) {
+<b class="nc">&nbsp;        scores = json.readValue(&quot;scores&quot;, ArrayList.class, Score.class, jsonData);</b>
+<b class="nc">&nbsp;    }</b>
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

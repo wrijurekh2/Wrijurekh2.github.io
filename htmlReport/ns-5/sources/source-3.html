@@ -1,0 +1,348 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > WorldInputProcessor</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim.world</a>
+</div>
+
+<h1>Coverage Summary for Class: WorldInputProcessor (io.github.unisim.world)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">WorldInputProcessor</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/76)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/111)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;
+&nbsp;package io.github.unisim.world;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Input.Keys;
+&nbsp;import com.badlogic.gdx.Input;
+&nbsp;import com.badlogic.gdx.InputProcessor;
+&nbsp;import io.github.unisim.GameState;
+&nbsp;import io.github.unisim.Point;
+&nbsp;import io.github.unisim.building.Building;
+&nbsp;
+&nbsp;/**
+&nbsp; * Handles input events related to the world, after they have passed through the
+&nbsp; * UiInputProcessor.
+&nbsp; */
+&nbsp;public class WorldInputProcessor implements InputProcessor {
+&nbsp;    private World world;
+<b class="nc">&nbsp;    private int[] cursorPos = new int[2];</b>
+<b class="nc">&nbsp;    private int[] cursorPosWhenClicked = new int[2];</b>
+<b class="nc">&nbsp;    private boolean clickedOnWorld = false;</b>
+<b class="nc">&nbsp;    private boolean draggedSinceClick = true;</b>
+<b class="nc">&nbsp;    private boolean moving = false;</b>
+<b class="nc">&nbsp;    private Point location = null;</b>
+&nbsp;    private boolean flipped;
+<b class="nc">&nbsp;    private boolean moveBuild = false;</b>
+&nbsp;    private Point initialSize;
+<b class="nc">&nbsp;    private boolean setSize = false;</b>
+&nbsp;
+<b class="nc">&nbsp;    public WorldInputProcessor(World world) {</b>
+<b class="nc">&nbsp;        this.world = world;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyDown(int keycode) {
+<b class="nc">&nbsp;        if (keycode == Keys.RIGHT || keycode == Keys.D) {</b>
+<b class="nc">&nbsp;            world.addDir(4, 0);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (keycode == Keys.LEFT || keycode == Keys.A) {</b>
+<b class="nc">&nbsp;            world.addDir(-4, 0);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (keycode == Keys.UP || keycode == Keys.W) {</b>
+<b class="nc">&nbsp;            world.addDir(0, 4);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (keycode == Keys.DOWN || keycode == Keys.S) {</b>
+<b class="nc">&nbsp;            world.addDir(0, -4);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        switch (keycode) {</b>
+&nbsp;            case Keys.P:
+<b class="nc">&nbsp;                GameState.paused = !GameState.paused;</b>
+&nbsp;                break;
+&nbsp;            case Keys.R:
+&nbsp;                // Flip the selected building
+<b class="nc">&nbsp;                if (world.selectedBuilding != null) {</b>
+<b class="nc">&nbsp;                    Point oldSize = null;</b>
+<b class="nc">&nbsp;                    if (world.getPlaced() == true &amp;&amp; setSize == false) {</b>
+<b class="nc">&nbsp;                        oldSize = new Point(world.selectedBuilding.size.x, world.selectedBuilding.size.y);</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    world.selectedBuilding.flipped = !world.selectedBuilding.flipped;</b>
+<b class="nc">&nbsp;                    int temp = world.selectedBuilding.size.x;</b>
+<b class="nc">&nbsp;                    world.selectedBuilding.size.x = world.selectedBuilding.size.y;</b>
+<b class="nc">&nbsp;                    world.selectedBuilding.size.y = temp;</b>
+<b class="nc">&nbsp;                    world.selectedBuildingUpdated = true;</b>
+<b class="nc">&nbsp;                    if (world.getPlaced() == true) {</b>
+<b class="nc">&nbsp;                        world.setSize(oldSize);</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;                break;
+&nbsp;            default:
+&nbsp;                break;
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyUp(int keycode) {
+<b class="nc">&nbsp;        if (keycode == Keys.RIGHT || keycode == Keys.D) {</b>
+<b class="nc">&nbsp;            world.addDir(-4, 0);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (keycode == Keys.LEFT || keycode == Keys.A) {</b>
+<b class="nc">&nbsp;            world.addDir(4, 0);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (keycode == Keys.UP || keycode == Keys.W) {</b>
+<b class="nc">&nbsp;            world.addDir(0, -4);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (keycode == Keys.DOWN || keycode == Keys.S) {</b>
+<b class="nc">&nbsp;            world.addDir(0, 4);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean keyTyped(char character) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Detect when the mouse has been clicked and record the cursor postion.
+&nbsp;     * Sets the clickedOnWorld flag, if the mouse has been clicked in a valid
+&nbsp;     * start location.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean touchDown(int x, int y, int pointer, int button) {
+<b class="nc">&nbsp;        Point gridPos = world.getCursorGridPos();</b>
+&nbsp;
+<b class="nc">&nbsp;        if (button == Input.Buttons.LEFT) {</b>
+<b class="nc">&nbsp;            Building clickedBuilding = world.getBuildingAt(gridPos);</b>
+<b class="nc">&nbsp;            setSize = false;</b>
+&nbsp;
+<b class="nc">&nbsp;            if (world.selectedBuilding != null) {</b>
+<b class="nc">&nbsp;                moving = false;</b>
+<b class="nc">&nbsp;                return true;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (clickedBuilding != null &amp;&amp; GameState.paused == false) {</b>
+<b class="nc">&nbsp;                moving = true;</b>
+&nbsp;                // Select building from map and reset its state
+<b class="nc">&nbsp;                world.selectedBuilding = clickedBuilding;</b>
+<b class="nc">&nbsp;                location = clickedBuilding.location;</b>
+<b class="nc">&nbsp;                flipped = clickedBuilding.flipped;</b>
+<b class="nc">&nbsp;                initialSize = clickedBuilding.size;</b>
+<b class="nc">&nbsp;                world.setLocation(location);</b>
+<b class="nc">&nbsp;                world.setFlipped(flipped);</b>
+<b class="nc">&nbsp;                world.setSize(initialSize);</b>
+<b class="nc">&nbsp;                moveBuild = true;</b>
+<b class="nc">&nbsp;                world.setPlaced(true);</b>
+<b class="nc">&nbsp;                world.buildingManager.removeBuilding(clickedBuilding);</b>
+<b class="nc">&nbsp;                world.selectedBuildingUpdated = true; // Notify world of update</b>
+<b class="nc">&nbsp;            } else if (world.selectedBuilding != null) {</b>
+<b class="nc">&nbsp;                if (world.buildingManager.isBuildable(</b>
+<b class="nc">&nbsp;                        world.btmLeft, world.topRight, world.getMapTiles())) {</b>
+&nbsp;                    // Set the building&#39;s location for preview
+<b class="nc">&nbsp;                    world.selectedBuilding.location = world.btmLeft;</b>
+&nbsp;
+&nbsp;                    // Update the preview in the BuildingManager
+<b class="nc">&nbsp;                    world.buildingManager.setPreviewBuilding(world.selectedBuilding);</b>
+&nbsp;
+&nbsp;                    // Mark the building as updated
+<b class="nc">&nbsp;                    world.selectedBuildingUpdated = true;</b>
+&nbsp;                } else {
+&nbsp;                    // Handle case where the position is not buildable
+<b class="nc">&nbsp;                    System.out.println(&quot;Cannot place the building here.&quot;);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (button == Input.Buttons.RIGHT) {</b>
+&nbsp;            // Deselect the building
+<b class="nc">&nbsp;            world.selectedBuilding = null;</b>
+<b class="nc">&nbsp;            world.selectedBuildingUpdated = true;</b>
+<b class="nc">&nbsp;            moveBuild = false;</b>
+<b class="nc">&nbsp;            world.setPlaced(false);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (world.selectedBuilding != null &amp;&amp; button == Input.Buttons.RIGHT) {</b>
+<b class="nc">&nbsp;            world.selectedBuilding = null;</b>
+<b class="nc">&nbsp;            moveBuild = false;</b>
+<b class="nc">&nbsp;            world.setPlaced(false);</b>
+&nbsp;        }
+<b class="nc">&nbsp;        clickedOnWorld = true;</b>
+<b class="nc">&nbsp;        cursorPos[0] = cursorPosWhenClicked[0] = x;</b>
+<b class="nc">&nbsp;        cursorPos[1] = cursorPosWhenClicked[1] = y;</b>
+&nbsp;
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * When the mouse is released, stop tracking the dragging events.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean touchUp(int x, int y, int pointer, int button) {
+<b class="nc">&nbsp;        clickedOnWorld = false;</b>
+<b class="nc">&nbsp;        if (moving == true) {</b>
+<b class="nc">&nbsp;            draggedSinceClick = true;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            draggedSinceClick = false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (!draggedSinceClick &amp;&amp; world.selectedBuilding != null) {</b>
+<b class="nc">&nbsp;            if (moveBuild == true) {</b>
+<b class="nc">&nbsp;                world.placeBuildingOld();</b>
+<b class="nc">&nbsp;                moveBuild = false;</b>
+<b class="nc">&nbsp;                world.setPlaced(false);</b>
+<b class="nc">&nbsp;                return false;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (world.placeBuilding()) {</b>
+<b class="nc">&nbsp;                draggedSinceClick = true;</b>
+<b class="nc">&nbsp;                location = null;</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                if (location != null) {</b>
+<b class="nc">&nbsp;                    world.setBuildingNull(location, flipped, initialSize);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * If the mouse has been clicked in a valid location, allow the map to be panned
+&nbsp;     * by clicking and holding the mouse button.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean touchDragged(int x, int y, int pointer) {
+<b class="nc">&nbsp;        if (clickedOnWorld) {</b>
+<b class="nc">&nbsp;            if (Math.max(Math.abs(cursorPos[0] - cursorPosWhenClicked[0]),</b>
+<b class="nc">&nbsp;                    Math.abs(cursorPos[1] - cursorPosWhenClicked[1])) &gt; 5) {</b>
+<b class="nc">&nbsp;                draggedSinceClick = true;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            world.pan(cursorPos[0] - x, y - cursorPos[1]);</b>
+<b class="nc">&nbsp;            cursorPos[0] = x;</b>
+<b class="nc">&nbsp;            cursorPos[1] = y;</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean mouseMoved(int x, int y) {
+<b class="nc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Zoom in on the map when the mouse wheel is scrolled.
+&nbsp;     */
+&nbsp;    @Override
+&nbsp;    public boolean scrolled(float amountX, float amountY) {
+<b class="nc">&nbsp;        world.zoom(amountY);</b>
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,392 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > SettingsScreen</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim.ui</a>
+</div>
+
+<h1>Coverage Summary for Class: SettingsScreen (io.github.unisim.ui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SettingsScreen</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/75)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">SettingsScreen$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">SettingsScreen$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">SettingsScreen$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/16)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/85)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim.ui;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.InputMultiplexer;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.Actor;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.Stage;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Image;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Label;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Table;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+&nbsp;import com.badlogic.gdx.utils.ScreenUtils;
+&nbsp;import io.github.unisim.GameState;
+&nbsp;import io.github.unisim.Settings.Difficulty;
+&nbsp;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+&nbsp;
+&nbsp;/**
+&nbsp; * The settings screen that allows the player to adjust the volume.
+&nbsp; */
+&nbsp;public class SettingsScreen implements Screen {
+&nbsp;  private Stage stage;
+&nbsp;  private Table table;
+<b class="nc">&nbsp;  private Skin altskin = GameState.altSkin;</b>
+&nbsp;  private Slider volumeSlider;
+&nbsp;  private TextButton backButton;
+&nbsp;  private Label difficultyLabel;
+<b class="nc">&nbsp;  private String[] difficulties = { &quot;Easy&quot;, &quot;Medium&quot;, &quot;Hard&quot; };</b>
+<b class="nc">&nbsp;  private int currentDifficultyIndex = 1;</b>
+&nbsp;  public static int difficultyVariable;
+<b class="nc">&nbsp;  private InputMultiplexer inputMultiplexer = new InputMultiplexer();</b>
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Create a new Settings screen and draw the initial UI layout.
+&nbsp;   */
+<b class="nc">&nbsp;  public SettingsScreen() {</b>
+<b class="nc">&nbsp;    stage = new Stage();</b>
+<b class="nc">&nbsp;    table = new Table();</b>
+<b class="nc">&nbsp;    difficultyLabel = new Label(difficulties[currentDifficultyIndex], altskin);</b>
+<b class="nc">&nbsp;    difficultyLabel.setFontScale(1.0f);</b>
+<b class="nc">&nbsp;    TextButton leftArrow = new TextButton(&quot;&lt;&quot;, altskin);</b>
+<b class="nc">&nbsp;    TextButton rightArrow = new TextButton(&quot;&gt;&quot;, altskin);</b>
+&nbsp;
+&nbsp;    // Create an Image for the background
+<b class="nc">&nbsp;    Image backgroundImage = new Image(new Texture(Gdx.files.internal(&quot;ui/settingsbackground.png&quot;)));</b>
+<b class="nc">&nbsp;    backgroundImage.setFillParent(true); // Fill the screen with image</b>
+<b class="nc">&nbsp;    stage.addActor(backgroundImage); // Add the background to the stage</b>
+&nbsp;
+&nbsp;    // Display settings title
+<b class="nc">&nbsp;    Label title = new Label(&quot;Settings&quot;, altskin);</b>
+<b class="nc">&nbsp;    title.setFontScale(1.3f);</b>
+<b class="nc">&nbsp;    title.setPosition(Gdx.graphics.getWidth() / 2 - 100,</b>
+<b class="nc">&nbsp;        Gdx.graphics.getHeight() - 150);</b>
+<b class="nc">&nbsp;    stage.addActor(title);</b>
+&nbsp;
+&nbsp;    // Display volume label
+<b class="nc">&nbsp;    Label volumeLabel = new Label(&quot;Difficulty&quot;, altskin);</b>
+<b class="nc">&nbsp;    volumeLabel.setFontScale(0.8f);</b>
+<b class="nc">&nbsp;    volumeLabel.setPosition(Gdx.graphics.getWidth() / 2 - 280,</b>
+<b class="nc">&nbsp;        Gdx.graphics.getHeight() - 235);</b>
+<b class="nc">&nbsp;    stage.addActor(volumeLabel);</b>
+&nbsp;
+&nbsp;    // Display difficulty label
+<b class="nc">&nbsp;    Label diffLabel = new Label(&quot;Volume&quot;, altskin);</b>
+<b class="nc">&nbsp;    diffLabel.setFontScale(0.8f);</b>
+<b class="nc">&nbsp;    diffLabel.setPosition(Gdx.graphics.getWidth() / 2 - 240,</b>
+<b class="nc">&nbsp;        Gdx.graphics.getHeight() - 405);</b>
+<b class="nc">&nbsp;    stage.addActor(diffLabel);</b>
+&nbsp;
+<b class="nc">&nbsp;    leftArrow.addListener(new ChangeListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void changed(ChangeEvent event, Actor actor) {
+<b class="nc">&nbsp;        currentDifficultyIndex = (currentDifficultyIndex - 1 + difficulties.length) % difficulties.length;</b>
+<b class="nc">&nbsp;        updateDifficulty();</b>
+&nbsp;        // confirmRestart();
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+<b class="nc">&nbsp;    rightArrow.addListener(new ChangeListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void changed(ChangeEvent event, Actor actor) {
+&nbsp;        // Increase difficulty index
+<b class="nc">&nbsp;        currentDifficultyIndex = (currentDifficultyIndex + 1) % difficulties.length;</b>
+<b class="nc">&nbsp;        updateDifficulty();</b>
+&nbsp;        // confirmRestart();
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Volume slider
+<b class="nc">&nbsp;    volumeSlider = new Slider(0.0f, 1.0f, 0.01f, false, altskin);</b>
+<b class="nc">&nbsp;    volumeSlider.setValue(GameState.musicManager.getVolume()); // Set current volume</b>
+<b class="nc">&nbsp;    volumeSlider.setSize(200, 50);</b>
+<b class="nc">&nbsp;    volumeSlider.addListener(event -&gt; {</b>
+&nbsp;      // Adjust the game volume based on slider value
+<b class="nc">&nbsp;      GameState.musicManager.setVolume(volumeSlider.getValue());</b>
+<b class="nc">&nbsp;      return false;</b>
+&nbsp;    });
+&nbsp;
+&nbsp;    // Difficulty Section
+<b class="nc">&nbsp;    Table difficultyTable = new Table();</b>
+<b class="nc">&nbsp;    difficultyTable.padTop(200);</b>
+<b class="nc">&nbsp;    difficultyTable.add(leftArrow).center().width(50).height(40).padRight(20); // Left arrow</b>
+<b class="nc">&nbsp;    difficultyTable.add(difficultyLabel).center().width(130).height(40); // Center the difficulty label</b>
+<b class="nc">&nbsp;    difficultyTable.add(rightArrow).center().width(50).height(40).padLeft(20); // Right arrow</b>
+<b class="nc">&nbsp;    table.add(difficultyTable).center(); // Add the nested difficulty table to the main table</b>
+<b class="nc">&nbsp;    table.row();</b>
+&nbsp;
+&nbsp;    // Back button
+<b class="nc">&nbsp;    backButton = new TextButton(&quot;Back&quot;, altskin);</b>
+<b class="nc">&nbsp;    backButton.setSize(200, 60);</b>
+<b class="nc">&nbsp;    backButton.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+&nbsp;        // Go back to the start menu
+<b class="nc">&nbsp;        if (GameState.currentScreen instanceof GameScreen) {</b>
+<b class="nc">&nbsp;          GameState.musicManager.resumeMusic(); // Resume game music</b>
+&nbsp;        }
+<b class="nc">&nbsp;        GameState.popScreen();</b>
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Add UI elements to stage
+<b class="nc">&nbsp;    table.setFillParent(true);</b>
+<b class="nc">&nbsp;    table.center().center();</b>
+<b class="nc">&nbsp;    table.pad(30, 100, 100, 100);</b>
+<b class="nc">&nbsp;    table.add(volumeSlider).center().width(250).height(40).padTop(130);</b>
+<b class="nc">&nbsp;    table.row();</b>
+<b class="nc">&nbsp;    table.add(backButton).center().width(150).height(40).padBottom(10).padTop(190);</b>
+<b class="nc">&nbsp;    stage.addActor(table);</b>
+&nbsp;
+<b class="nc">&nbsp;    inputMultiplexer.addProcessor(GameState.fullscreenInputProcessor);</b>
+<b class="nc">&nbsp;    inputMultiplexer.addProcessor(stage);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void show() {
+<b class="nc">&nbsp;    Difficulty diff = GameState.settings.getDifficulty();</b>
+<b class="nc">&nbsp;    if (diff == Difficulty.EASY) {</b>
+<b class="nc">&nbsp;      currentDifficultyIndex = 0;</b>
+<b class="nc">&nbsp;    } else if (diff == Difficulty.MEDIUM) {</b>
+<b class="nc">&nbsp;      currentDifficultyIndex = 1;</b>
+&nbsp;    } else {
+<b class="nc">&nbsp;      currentDifficultyIndex = 2;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    updateDifficulty();</b>
+<b class="nc">&nbsp;    volumeSlider.setValue(GameState.musicManager.getVolume());</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void render(float delta) {
+&nbsp;    // Clear the screen
+<b class="nc">&nbsp;    ScreenUtils.clear(GameState.UISecondaryColour);</b>
+&nbsp;
+&nbsp;    // Draw the stage containing the volume slider and buttons
+<b class="nc">&nbsp;    stage.act(delta);</b>
+<b class="nc">&nbsp;    stage.draw();</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public void updateDifficulty() {
+&nbsp;    // Update the difficulty label
+<b class="nc">&nbsp;    difficultyLabel.setText(difficulties[currentDifficultyIndex]);</b>
+&nbsp;
+&nbsp;    // Update the GameState difficulty
+<b class="nc">&nbsp;    GameState.settings.setDifficulty(Difficulty.values()[currentDifficultyIndex]);</b>
+&nbsp;
+&nbsp;    // GameState.restartGame();
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void resize(int width, int height) {
+<b class="nc">&nbsp;    stage.getViewport().update(width, height, true);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void pause() {
+<b class="nc">&nbsp;  }</b>
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void resume() {
+<b class="nc">&nbsp;    Gdx.input.setInputProcessor(inputMultiplexer);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void hide() {
+<b class="nc">&nbsp;  }</b>
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void dispose() {
+<b class="nc">&nbsp;    stage.dispose();</b>
+<b class="nc">&nbsp;    altskin.dispose();</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

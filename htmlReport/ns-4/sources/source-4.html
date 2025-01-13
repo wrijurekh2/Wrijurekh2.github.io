@@ -1,0 +1,484 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GameScreen</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim.ui</a>
+</div>
+
+<h1>Coverage Summary for Class: GameScreen (io.github.unisim.ui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameScreen</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/76)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/171)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameScreen$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/76)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/172)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim.ui;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.InputMultiplexer;
+&nbsp;import com.badlogic.gdx.InputProcessor;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.graphics.GL20;
+&nbsp;import com.badlogic.gdx.graphics.g2d.BitmapFont;
+&nbsp;import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+&nbsp;import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+&nbsp;import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.Stage;
+&nbsp;import com.badlogic.gdx.utils.viewport.ScreenViewport;
+&nbsp;
+&nbsp;import io.github.unisim.AchievementManager;
+&nbsp;import io.github.unisim.GameState;
+&nbsp;import io.github.unisim.Leaderboard;
+&nbsp;import io.github.unisim.MoneyClass;
+&nbsp;import io.github.unisim.ReputationClass;
+&nbsp;import io.github.unisim.Score;
+&nbsp;import io.github.unisim.Timer;
+&nbsp;import io.github.unisim.building.BuildingType;
+&nbsp;import io.github.unisim.world.UiInputProcessor;
+&nbsp;import io.github.unisim.world.World;
+&nbsp;import io.github.unisim.world.WorldInputProcessor;
+&nbsp;
+&nbsp;/**
+&nbsp; * Game screen where the main game is rendered and controlled.
+&nbsp; * Supports pausing the game with a pause menu.
+&nbsp; */
+&nbsp;public class GameScreen implements Screen {
+<b class="nc">&nbsp;  private World world = new World(this);</b>
+<b class="nc">&nbsp;  private Stage stage = new Stage(new ScreenViewport());</b>
+&nbsp;  private InfoBar infoBar;
+&nbsp;  private BuildingMenu buildingMenu;
+&nbsp;  private Timer timer;
+<b class="nc">&nbsp;  private InputProcessor uiInputProcessor = new UiInputProcessor(stage);</b>
+<b class="nc">&nbsp;  private InputProcessor worldInputProcessor = new WorldInputProcessor(world);</b>
+<b class="nc">&nbsp;  private InputMultiplexer inputMultiplexer = new InputMultiplexer();</b>
+<b class="nc">&nbsp;  private Popups popups = new Popups(this);</b>
+&nbsp;  private int prevTime;
+<b class="nc">&nbsp;  private Leaderboard leaderboard = new Leaderboard();</b>
+&nbsp;  private ShapeRenderer shapeRenderer;
+&nbsp;  private BitmapFont font;
+&nbsp;  private GlyphLayout layout;
+<b class="nc">&nbsp;  private Score scoreClass = new Score(&quot;&quot;, 0);</b>
+&nbsp;  private MoneyClass moneyClass;
+&nbsp;  private ReputationClass reputationClass;
+<b class="nc">&nbsp;  private int prevSec = 0;</b>
+&nbsp;  private BuildingType types;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Constructor for the GameScreen.
+&nbsp;   */
+<b class="nc">&nbsp;  public GameScreen() {</b>
+<b class="nc">&nbsp;    buildingMenu = new BuildingMenu(stage, world);</b>
+<b class="nc">&nbsp;    if (world.getMultiplier() == 1f) {</b>
+<b class="nc">&nbsp;      moneyClass = new MoneyClass(15000);</b>
+<b class="nc">&nbsp;      reputationClass = new ReputationClass(60);</b>
+<b class="nc">&nbsp;    } else if (world.getMultiplier() == 1.5f) {</b>
+<b class="nc">&nbsp;      moneyClass = new MoneyClass(20000);</b>
+<b class="nc">&nbsp;      reputationClass = new ReputationClass(70);</b>
+&nbsp;    } else {
+<b class="nc">&nbsp;      moneyClass = new MoneyClass(10000);</b>
+<b class="nc">&nbsp;      reputationClass = new ReputationClass(50);</b>
+&nbsp;    }
+<b class="nc">&nbsp;    timer = new Timer(300_000);// 300_000</b>
+<b class="nc">&nbsp;    infoBar = new InfoBar(stage, timer, world, scoreClass, moneyClass, reputationClass, this);</b>
+<b class="nc">&nbsp;    prevTime = timer.getCurrGameYear();</b>
+<b class="nc">&nbsp;    shapeRenderer = new ShapeRenderer();</b>
+<b class="nc">&nbsp;    font = new BitmapFont(Gdx.files.internal(&quot;ui/score.fnt&quot;));</b>
+<b class="nc">&nbsp;    layout = new GlyphLayout();</b>
+&nbsp;
+<b class="nc">&nbsp;    inputMultiplexer.addProcessor(GameState.fullscreenInputProcessor);</b>
+<b class="nc">&nbsp;    inputMultiplexer.addProcessor(stage);</b>
+<b class="nc">&nbsp;    inputMultiplexer.addProcessor(uiInputProcessor);</b>
+<b class="nc">&nbsp;    inputMultiplexer.addProcessor(worldInputProcessor);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void show() {
+<b class="nc">&nbsp;    buildingMenu = new BuildingMenu(stage, world);</b>
+<b class="nc">&nbsp;    scoreClass.setPlayerName(GameState.settings.getPlayerName());</b>
+<b class="nc">&nbsp;    GameState.musicManager.stopMusic();</b>
+<b class="nc">&nbsp;    GameState.musicManager.resumeMusic();</b>
+<b class="nc">&nbsp;    GameState.musicManager.playGameMusic();</b>
+<b class="nc">&nbsp;    popups.resultPopup(&quot;Click to start the game!&quot;, true);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void render(float delta) {
+<b class="nc">&nbsp;    world.render();</b>
+<b class="nc">&nbsp;    timeScore();</b>
+&nbsp;
+<b class="nc">&nbsp;    if (this.scoreClass.getScore() &gt;= 10000</b>
+<b class="nc">&nbsp;        &amp;&amp; AchievementManager.getInstance().getAchievements().get(1).isUnlocked() == false) {</b>
+<b class="nc">&nbsp;      addMoneyRep(4000, 10);</b>
+<b class="nc">&nbsp;      String reward = &quot;&lt;html&gt;&lt;p&gt;Achievement: Veteran builder&lt;/p&gt;&lt;p&gt;You have received $4000 and 10% rep&lt;/p&gt;&lt;html&gt;&quot;;</b>
+<b class="nc">&nbsp;      AchievementManager.getInstance().setReward(reward);</b>
+<b class="nc">&nbsp;      AchievementManager.getInstance().checkAchievement(&quot;VETERAN&quot;);</b>
+<b class="nc">&nbsp;      world.setPopup(&quot;reward&quot;);</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    checkPopup();</b>
+&nbsp;
+<b class="nc">&nbsp;    float dt = Gdx.graphics.getDeltaTime();</b>
+<b class="nc">&nbsp;    if (!GameState.paused &amp;&amp; !GameState.gameOver) {</b>
+<b class="nc">&nbsp;      if (!timer.tick(dt * 1000) || reputationClass.getRep() == 0) {</b>
+<b class="nc">&nbsp;        GameState.gameOver = true;</b>
+&nbsp;      }
+&nbsp;    }
+<b class="nc">&nbsp;    stage.act(dt);</b>
+<b class="nc">&nbsp;    infoBar.update();</b>
+<b class="nc">&nbsp;    buildingMenu.update();</b>
+<b class="nc">&nbsp;    stage.draw();</b>
+&nbsp;
+<b class="nc">&nbsp;    if (GameState.paused) {</b>
+<b class="nc">&nbsp;      Gdx.gl.glEnable(GL20.GL_BLEND); // Enable blending for transparency</b>
+<b class="nc">&nbsp;      shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);</b>
+&nbsp;
+&nbsp;      // Set the color to black with 50% opacity
+<b class="nc">&nbsp;      shapeRenderer.setColor(0, 0, 0, 0.5f);</b>
+&nbsp;
+&nbsp;      // Draw the rectangle covering half the screen (top or bottom half)
+<b class="nc">&nbsp;      shapeRenderer.rect(0, 0, Gdx.graphics.getWidth() + 1000, Gdx.graphics.getHeight() + 1000);</b>
+&nbsp;
+<b class="nc">&nbsp;      shapeRenderer.end();</b>
+<b class="nc">&nbsp;      Gdx.gl.glDisable(GL20.GL_BLEND);</b>
+&nbsp;
+<b class="nc">&nbsp;      SpriteBatch batch = new SpriteBatch();</b>
+<b class="nc">&nbsp;      batch.begin();</b>
+&nbsp;
+<b class="nc">&nbsp;      String pauseText = &quot;Paused!&quot;;</b>
+<b class="nc">&nbsp;      layout.setText(font, pauseText);</b>
+<b class="nc">&nbsp;      float textWidth = layout.width;</b>
+<b class="nc">&nbsp;      float textHeight = layout.height;</b>
+<b class="nc">&nbsp;      float centerX = (Gdx.graphics.getWidth() - textWidth) / 2;</b>
+<b class="nc">&nbsp;      float centerY = (Gdx.graphics.getHeight() - textHeight) / 2 + 50;</b>
+<b class="nc">&nbsp;      font.draw(batch, pauseText, centerX, centerY);</b>
+&nbsp;
+<b class="nc">&nbsp;      batch.end();</b>
+<b class="nc">&nbsp;      batch.dispose();</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    if (GameState.gameOver) {</b>
+<b class="nc">&nbsp;      GameState.gameOverData.setScore(scoreClass.getScore());</b>
+<b class="nc">&nbsp;      leaderboard.addScore(GameState.settings.getPlayerName(), scoreClass.getScore());</b>
+<b class="nc">&nbsp;      GameState.gameOverData.setScore(scoreClass.getScore());</b>
+<b class="nc">&nbsp;      GameState.currentScreen = GameState.gameOverScreen;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    if (popups.getActive()) {</b>
+<b class="nc">&nbsp;      world.selectedBuilding = null;</b>
+<b class="nc">&nbsp;      GameState.paused = true;</b>
+<b class="nc">&nbsp;      Gdx.input.setInputProcessor(null);</b>
+&nbsp;    } else {
+<b class="nc">&nbsp;      Gdx.input.setInputProcessor(inputMultiplexer);</b>
+<b class="nc">&nbsp;      if (timer.getCurrGameYear() != 0 &amp;&amp; timer.getCurrGameYear() != prevTime &amp;&amp; timer.getCurrRemMinutes() != 0) {</b>
+<b class="nc">&nbsp;        prevTime = timer.getCurrGameYear();</b>
+<b class="nc">&nbsp;        popups.event();</b>
+&nbsp;      }
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    if (GameState.paused &amp;&amp; world.selectedBuilding != null) {</b>
+<b class="nc">&nbsp;      if (world.getLocation() != null) {</b>
+<b class="nc">&nbsp;        world.setBuildingNull(world.getLocation(), world.getFlipped(), world.getSize());</b>
+&nbsp;      } else {
+<b class="nc">&nbsp;        world.selectedBuilding = null;</b>
+<b class="nc">&nbsp;        world.selectedBuildingUpdated = true;</b>
+&nbsp;      }
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void resize(int width, int height) {
+<b class="nc">&nbsp;    world.resize(width, height);</b>
+<b class="nc">&nbsp;    stage.getViewport().update(width, height, true);</b>
+<b class="nc">&nbsp;    infoBar.resize(width, height);</b>
+<b class="nc">&nbsp;    buildingMenu.resize(width, height);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void pause() {
+<b class="nc">&nbsp;    GameState.paused = true;</b>
+<b class="nc">&nbsp;    Runtime.getRuntime().addShutdownHook(new Thread(() -&gt; {</b>
+<b class="nc">&nbsp;      if (Gdx.app != null) {</b>
+<b class="nc">&nbsp;        leaderboard.addScore(GameState.settings.getPlayerName(), scoreClass.getScore());</b>
+<b class="nc">&nbsp;        GameState.gameOverData.setScore(scoreClass.getScore());</b>
+&nbsp;      }
+&nbsp;    }));
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void resume() {
+<b class="nc">&nbsp;    Gdx.input.setInputProcessor(inputMultiplexer);</b>
+&nbsp;
+<b class="nc">&nbsp;    if (GameState.gameOver) {</b>
+<b class="nc">&nbsp;      GameState.gameOver = false;</b>
+<b class="nc">&nbsp;      GameState.paused = true;</b>
+<b class="nc">&nbsp;      timer.reset();</b>
+<b class="nc">&nbsp;      world.reset();</b>
+<b class="nc">&nbsp;      infoBar.reset();</b>
+<b class="nc">&nbsp;      buildingMenu.reset();</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void hide() {
+<b class="nc">&nbsp;    GameState.musicManager.pauseMusic();</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void dispose() {
+<b class="nc">&nbsp;    world.dispose();</b>
+<b class="nc">&nbsp;    stage.dispose();</b>
+<b class="nc">&nbsp;    shapeRenderer.dispose();</b>
+<b class="nc">&nbsp;    font.dispose();</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public String getTimer() {
+<b class="nc">&nbsp;    return timer.getRemTime();</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public void calcBuild(String buildingType, Boolean newBuilding) {
+<b class="nc">&nbsp;    int money = 0, rep = 0;</b>
+<b class="nc">&nbsp;    money = world.selectedBuilding.cost;</b>
+<b class="nc">&nbsp;    rep = world.selectedBuilding.rep;</b>
+<b class="nc">&nbsp;    if (newBuilding == true) { // Placing a new building</b>
+<b class="nc">&nbsp;      this.scoreClass.addScore((int) ((money + rep) / 3));</b>
+&nbsp;    } else {// Moving an already placed building
+<b class="nc">&nbsp;      money = money / 2;</b>
+<b class="nc">&nbsp;      rep = 0;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    moneyClass.remMoney(money);</b>
+<b class="nc">&nbsp;    reputationClass.addRep(rep);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean buildCheck() {
+<b class="nc">&nbsp;    if (this.moneyClass.getMoney() &lt; world.selectedBuilding.cost) {</b>
+<b class="nc">&nbsp;      popups.resultPopup(&quot;You don&#39;t have enough money to build this!&quot;, true);</b>
+<b class="nc">&nbsp;      return false;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    return true;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean buildCheckOld() {
+<b class="nc">&nbsp;    int cost = (int) (world.selectedBuilding.cost / 2);</b>
+<b class="nc">&nbsp;    if (this.moneyClass.getMoney() &lt; cost &amp;&amp; this.moneyClass.getMoney() != cost) {</b>
+<b class="nc">&nbsp;      popups.resultPopup(&quot;You don&#39;t have enough money to move this!&quot;, true);</b>
+<b class="nc">&nbsp;      return false;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    return true;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean checkMoney(int money) {
+<b class="nc">&nbsp;    if (this.moneyClass.getMoney() &lt; money) {</b>
+<b class="nc">&nbsp;      return false;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    return true;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public boolean checkRep(int rep) {
+<b class="nc">&nbsp;    if (this.reputationClass.getRep() &lt; rep) {</b>
+<b class="nc">&nbsp;      return false;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    return true;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public void addMoneyRep(int money, int rep) {
+<b class="nc">&nbsp;    this.moneyClass.addMoney(money);</b>
+<b class="nc">&nbsp;    this.reputationClass.addRep(rep);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @SuppressWarnings(&quot;static-access&quot;)
+&nbsp;  public void timeScore() {
+<b class="nc">&nbsp;    int sec = timer.getCurrRemSeconds();</b>
+<b class="nc">&nbsp;    if (sec != prevSec) {</b>
+<b class="nc">&nbsp;      if ((sec % 15 == 0)) {</b>
+<b class="nc">&nbsp;        prevSec = sec;</b>
+<b class="nc">&nbsp;        int remove = (int) (15 * (2 - world.getMultiplier()));</b>
+<b class="nc">&nbsp;        reputationClass.remRep(remove);</b>
+&nbsp;      }
+&nbsp;      // Add money based on amount of buildings and their type every 30 seconds
+<b class="nc">&nbsp;      if (sec % 30 == 0) {</b>
+<b class="nc">&nbsp;        float multiplier = world.getMultiplier();</b>
+<b class="nc">&nbsp;        for (BuildingType type : types.values()) {</b>
+<b class="nc">&nbsp;          int money = (int) (world.getBuildingCount(type) * 100 * multiplier);</b>
+<b class="nc">&nbsp;          scoreClass.addScore((int) (money * reputationClass.getRep() / 10));</b>
+<b class="nc">&nbsp;          switch (type) {</b>
+&nbsp;            case RECREATION:
+<b class="nc">&nbsp;              moneyClass.addMoney(money);</b>
+&nbsp;              break;
+&nbsp;            case LEARNING:
+<b class="nc">&nbsp;              moneyClass.addMoney(money);</b>
+&nbsp;              break;
+&nbsp;            case SLEEPING:
+<b class="nc">&nbsp;              moneyClass.addMoney(money);</b>
+&nbsp;              break;
+&nbsp;            case EATING:
+<b class="nc">&nbsp;              moneyClass.addMoney(money);</b>
+&nbsp;              break;
+&nbsp;            default:
+&nbsp;              break;
+&nbsp;          }
+&nbsp;        }
+&nbsp;      }
+<b class="nc">&nbsp;      if (sec % 45 == 0) {</b>
+<b class="nc">&nbsp;        moneyClass.addMoney(30 * reputationClass.getRep());</b>
+&nbsp;      }
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  public void checkPopup() {
+<b class="nc">&nbsp;    if (world.getPopup() != &quot;null&quot;) {</b>
+<b class="nc">&nbsp;      if (world.getPopup() == &quot;paused&quot;) {</b>
+<b class="nc">&nbsp;        popups.resultPopup(&quot;You can&#39;t build while paused!&quot;, false);</b>
+<b class="nc">&nbsp;      } else if (world.getPopup() == &quot;building&quot;) {</b>
+<b class="nc">&nbsp;        if (world.getLocation() != null) {</b>
+<b class="nc">&nbsp;          world.setBuildingNull(world.getLocation(), world.getFlipped(), world.getSize());</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;          world.selectedBuilding = null;</b>
+<b class="nc">&nbsp;          world.selectedBuildingUpdated = true;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        popups.resultPopup(&quot;You have to deselect your building!&quot;, true);</b>
+<b class="nc">&nbsp;      } else if (world.getPopup() == &quot;invalid&quot;) {</b>
+<b class="nc">&nbsp;        popups.resultPopup(&quot;You can&#39;t build here!&quot;, true);</b>
+<b class="nc">&nbsp;      } else if (world.getPopup() == &quot;reward&quot;) {</b>
+<b class="nc">&nbsp;        String result = AchievementManager.getInstance().getReward();</b>
+<b class="nc">&nbsp;        popups.resultPopup(result, true);</b>
+&nbsp;      }
+<b class="nc">&nbsp;      world.setPopup(&quot;null&quot;);</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,249 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Timer</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim</a>
+</div>
+
+<h1>Coverage Summary for Class: Timer (io.github.unisim)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Timer</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70%
+  </span>
+  <span class="absValue">
+    (7/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    16.7%
+  </span>
+  <span class="absValue">
+    (1/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70.6%
+  </span>
+  <span class="absValue">
+    (24/34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim;
+&nbsp;
+&nbsp;/**
+&nbsp; * A simple timer utility that can be updated on each render call.
+&nbsp; */
+&nbsp;public class Timer {
+&nbsp;  private float remainingTime;
+&nbsp;  private float initialTime;
+&nbsp;  private boolean hasFinished;
+&nbsp;  private int currGameYear;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Create a new timer set to count down from an initial number of milliseconds.
+&nbsp;   * 
+&nbsp;   * @param initialTime - The number of milliseconds before the timer ends
+&nbsp;   */
+<b class="fc">&nbsp;  public Timer(float initialTime) {</b>
+<b class="fc">&nbsp;    this.initialTime = initialTime;</b>
+<b class="fc">&nbsp;    remainingTime = initialTime;</b>
+<b class="fc">&nbsp;    hasFinished = false;</b>
+<b class="fc">&nbsp;  }</b>
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Removes a provided timestep from the counter and returns whether the timer
+&nbsp;   * has stopped.
+&nbsp;   * 
+&nbsp;   * @param deltaTime - the time in milliseconds to remove from the counter
+&nbsp;   * @return - true if the timer is running and the time has been decremented,
+&nbsp;   *         false otherwise.
+&nbsp;   */
+&nbsp;  public boolean tick(float deltaTime) {
+<b class="nc">&nbsp;    remainingTime -= deltaTime;</b>
+<b class="nc">&nbsp;    if (remainingTime &gt; 0) {</b>
+<b class="nc">&nbsp;      return true;</b>
+&nbsp;    } else {
+<b class="nc">&nbsp;      hasFinished = true;</b>
+<b class="nc">&nbsp;      return false;</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Reset the timer to its&#39; initial time value.
+&nbsp;   */
+&nbsp;  public void reset() {
+<b class="nc">&nbsp;    remainingTime = initialTime;</b>
+<b class="nc">&nbsp;    hasFinished = false;</b>
+<b class="nc">&nbsp;  }</b>
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Return the remaining time in a String representation.
+&nbsp;   * 
+&nbsp;   * @return - remaining time in the form MM:SS
+&nbsp;   */
+&nbsp;  public String getRemTime() {
+&nbsp;    // get the number of minutes and seconds from the remaining time in
+&nbsp;    // milliseconds.
+<b class="fc">&nbsp;    int remainingMinutes = (int) ((remainingTime + 1000) / 60_000);</b>
+<b class="fc">&nbsp;    int remainingSeconds = (int) Math.ceil(remainingTime / 1000 - 60 * remainingMinutes);</b>
+&nbsp;
+<b class="fc">&nbsp;    return formatNum(remainingMinutes) + &quot;:&quot; + formatNum(remainingSeconds);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Retrieves the current game year based on elapsed time.
+&nbsp;   * 
+&nbsp;   * @return - Current game year - integer
+&nbsp;   */
+&nbsp;  public int getCurrGameYear() {
+<b class="fc">&nbsp;    return currGameYear;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Retrieves the remaining minutes of the timer.
+&nbsp;   * 
+&nbsp;   * @return - Remaining minutes - integer
+&nbsp;   */
+&nbsp;  public int getCurrRemMinutes() {
+<b class="fc">&nbsp;    int remainingMinutes = (int) ((remainingTime + 1000) / 60_000);</b>
+<b class="fc">&nbsp;    return remainingMinutes;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Retrieves the remaining seconds of the timer.
+&nbsp;   * 
+&nbsp;   * @return - Remaining seconds - integer
+&nbsp;   */
+&nbsp;  public int getCurrRemSeconds() {
+<b class="fc">&nbsp;    int remainingMinutes = (int) ((remainingTime + 1000) / 60_000);</b>
+<b class="fc">&nbsp;    int remainingSeconds = (int) Math.ceil(remainingTime / 1000 - 60 * remainingMinutes);</b>
+<b class="fc">&nbsp;    return remainingSeconds;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Format a number of minutes or seconds to always have a length of two digits.
+&nbsp;   * This is done by prepending a zero if the number has only one digit.
+&nbsp;   * 
+&nbsp;   * @param num - the number to convert to a formatted string
+&nbsp;   * @return - a formatted string with length at least two.
+&nbsp;   */
+&nbsp;  private String formatNum(int num) {
+<b class="pc">&nbsp;    if (num &lt; 10) {</b>
+<b class="fc">&nbsp;      return &quot;0&quot; + num;</b>
+&nbsp;    }
+<b class="nc">&nbsp;    return String.valueOf(num);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Return whether the timer is still running or has reached zero.
+&nbsp;   * 
+&nbsp;   * @return - true if the timer is running, false if the remaining time has
+&nbsp;   *         reached zero
+&nbsp;   */
+&nbsp;  public boolean isRunning() {
+<b class="nc">&nbsp;    return !hasFinished;</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Calculates and returns the current game time based on the elapsed timer.
+&nbsp;   * 
+&nbsp;   * @return - Game year and month in the format Y:MM
+&nbsp;   */
+&nbsp;  public String getGameTime() {
+<b class="fc">&nbsp;    int remainingMinutes = (int) ((remainingTime + 1000) / 60_000);</b>
+<b class="fc">&nbsp;    int remainingSeconds = (int) Math.ceil(remainingTime / 1000 - 60 * remainingMinutes);</b>
+&nbsp;
+<b class="fc">&nbsp;    int startTime = (int) ((this.initialTime / 1000)); // Initial time in seconds</b>
+<b class="fc">&nbsp;    int timePassed = remainingMinutes * 60 + remainingSeconds; // Elapsed time in seconds</b>
+<b class="fc">&nbsp;    int time = startTime - timePassed; // Remaining time in seconds</b>
+<b class="fc">&nbsp;    currGameYear = time / 60;</b>
+<b class="fc">&nbsp;    int currGameMonth = (time / 5) % 12; // 5 seconds per month</b>
+<b class="fc">&nbsp;    return &quot;Y: &quot; + (int) currGameYear + &quot; M: &quot; + (int) currGameMonth;</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

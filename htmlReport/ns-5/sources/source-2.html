@@ -1,0 +1,646 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > World</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim.world</a>
+</div>
+
+<h1>Coverage Summary for Class: World (io.github.unisim.world)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">World</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/37)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/76)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/198)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim.world;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.graphics.OrthographicCamera;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+&nbsp;import com.badlogic.gdx.maps.tiled.TiledMap;
+&nbsp;import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+&nbsp;import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+&nbsp;import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
+&nbsp;import com.badlogic.gdx.math.Matrix4;
+&nbsp;import com.badlogic.gdx.math.Vector2;
+&nbsp;import com.badlogic.gdx.math.Vector3;
+&nbsp;import com.badlogic.gdx.utils.ScreenUtils;
+&nbsp;import com.badlogic.gdx.utils.viewport.ScreenViewport;
+&nbsp;import com.badlogic.gdx.utils.viewport.Viewport;
+&nbsp;
+&nbsp;import io.github.unisim.AchievementManager;
+&nbsp;import io.github.unisim.GameState;
+&nbsp;import io.github.unisim.Point;
+&nbsp;import io.github.unisim.Settings.Difficulty;
+&nbsp;import io.github.unisim.building.Building;
+&nbsp;import io.github.unisim.building.BuildingManager;
+&nbsp;import io.github.unisim.building.BuildingType;
+&nbsp;import io.github.unisim.ui.GameScreen;
+&nbsp;
+&nbsp;/**
+&nbsp; * A class that holds all the gameplay elements of the game UniSim.
+&nbsp; * It has the ablity to render the game and update the state of the game
+&nbsp; */
+&nbsp;public class World {
+<b class="nc">&nbsp;    private OrthographicCamera camera = new OrthographicCamera();</b>
+<b class="nc">&nbsp;    private Viewport viewport = new ScreenViewport(camera);</b>
+<b class="nc">&nbsp;    private TiledMap map = new TmxMapLoader().load(&quot;map/medium_map.tmx&quot;);</b>
+<b class="nc">&nbsp;    private float unitScale = 1f / 16f;</b>
+<b class="nc">&nbsp;    private IsometricTiledMapRenderer renderer = new IsometricTiledMapRenderer(map, unitScale);</b>
+<b class="nc">&nbsp;    private Vector2 camPosition = new Vector2(150f, 0f);</b>
+<b class="nc">&nbsp;    private Vector2 panVelocity = new Vector2(0f, 0f);</b>
+<b class="nc">&nbsp;    private float zoomVelocity = 0f;</b>
+<b class="nc">&nbsp;    private final float timeStepSize = 0.001f;</b>
+<b class="nc">&nbsp;    private float panDt = 0f;</b>
+<b class="nc">&nbsp;    private float zoomDt = 0f;</b>
+&nbsp;    private float minZoom;
+&nbsp;    private float maxZoom;
+<b class="nc">&nbsp;    private SpriteBatch tileHighlightBatch = new SpriteBatch();</b>
+<b class="nc">&nbsp;    private SpriteBatch buildingBatch = new SpriteBatch();</b>
+<b class="nc">&nbsp;    private Texture tileHighlight = new Texture(Gdx.files.internal(&quot;map/tileHighlight.png&quot;));</b>
+<b class="nc">&nbsp;    private Texture errTileHighlight = new Texture(Gdx.files.internal(&quot;map/errTileHighlight.png&quot;));</b>
+&nbsp;    private Matrix4 isoTransform;
+&nbsp;    private Matrix4 invIsoTransform;
+&nbsp;    public BuildingManager buildingManager;
+&nbsp;    public boolean canBuild;
+&nbsp;    public Point mousePosInWorld;
+&nbsp;    public Point btmLeft;
+&nbsp;    public Point topRight;
+&nbsp;    public Building selectedBuilding;
+&nbsp;    public boolean selectedBuildingUpdated;
+&nbsp;    private Point lastLocation;
+&nbsp;    private GameScreen gameScreen;
+<b class="nc">&nbsp;    private int camX = 0;</b>
+<b class="nc">&nbsp;    private int camY = 0;</b>
+<b class="nc">&nbsp;    private String popupStatus = &quot;null&quot;;</b>
+<b class="nc">&nbsp;    private float multiplier = 1f;</b>
+<b class="nc">&nbsp;    private boolean placedBuild = false;</b>
+&nbsp;    private boolean flipped;
+<b class="nc">&nbsp;    private Point lastSize = new Point();</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Create a new World.
+&nbsp;     */
+<b class="nc">&nbsp;    public World(GameScreen gameScreen) {</b>
+<b class="nc">&nbsp;        this.gameScreen = gameScreen;</b>
+&nbsp;
+<b class="nc">&nbsp;        camera.zoom = 0.05f;</b>
+<b class="nc">&nbsp;        initIsometricTransform();</b>
+<b class="nc">&nbsp;        buildingManager = new BuildingManager(isoTransform);</b>
+<b class="nc">&nbsp;        selectedBuilding = null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDifficulty(Difficulty difficulty) {
+<b class="nc">&nbsp;        if (difficulty == Difficulty.HARD) {</b>
+<b class="nc">&nbsp;            this.multiplier = 0.4f;</b>
+<b class="nc">&nbsp;        } else if (difficulty == Difficulty.MEDIUM) {</b>
+<b class="nc">&nbsp;            this.multiplier = 1f;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            this.multiplier = 1.5f;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Releases all resources of this object.
+&nbsp;     * Should be called when the World object is no longer needed
+&nbsp;     */
+&nbsp;    public void dispose() {
+<b class="nc">&nbsp;        map.dispose();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Steps the world forward by delta time and renders the world.
+&nbsp;     */
+&nbsp;    public void render() {
+<b class="nc">&nbsp;        viewport.apply();</b>
+&nbsp;
+<b class="nc">&nbsp;        ScreenUtils.clear(0.59f, 0.72f, 1f, 1f);</b>
+&nbsp;
+<b class="nc">&nbsp;        updatePan();</b>
+<b class="nc">&nbsp;        updateZoom();</b>
+&nbsp;
+&nbsp;        // Render the map tiles
+&nbsp;        // Render the map 0.0624 units lower than the rest of the world to account for
+&nbsp;        // the extra pixel at the bottom of each tile. (The pixel is used to prevent
+&nbsp;        // tiny gaps between the tiles caused by floating point errors)
+<b class="nc">&nbsp;        camera.position.set(camPosition.x, camPosition.y + 0.0624f, 0);</b>
+<b class="nc">&nbsp;        camera.update();</b>
+<b class="nc">&nbsp;        renderer.setView((OrthographicCamera) viewport.getCamera());</b>
+<b class="nc">&nbsp;        renderer.render();</b>
+&nbsp;
+&nbsp;        // Reset the camera position to the correct value for the rest of the world
+<b class="nc">&nbsp;        camera.position.set(camPosition.x, camPosition.y, 0);</b>
+<b class="nc">&nbsp;        camera.update();</b>
+&nbsp;
+<b class="nc">&nbsp;        pan(camX, camY);</b>
+&nbsp;
+&nbsp;        // Deselect the selected building if the game is over
+<b class="nc">&nbsp;        if (GameState.gameOver) {</b>
+<b class="nc">&nbsp;            selectedBuilding = null;</b>
+<b class="nc">&nbsp;            selectedBuildingUpdated = true;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Update the mouse grid pos and the buildable flag
+<b class="nc">&nbsp;        Point mouseGridPos = getCursorGridPos();</b>
+<b class="nc">&nbsp;        if ((!mouseGridPos.equals(mousePosInWorld) || selectedBuildingUpdated)) {</b>
+<b class="nc">&nbsp;            mousePosInWorld = mouseGridPos;</b>
+<b class="nc">&nbsp;            btmLeft = mousePosInWorld;</b>
+<b class="nc">&nbsp;            Point buildingSize = selectedBuilding == null ? new Point(1, 1) : selectedBuilding.size;</b>
+<b class="nc">&nbsp;            btmLeft.x -= buildingSize.x / 2;</b>
+<b class="nc">&nbsp;            btmLeft.y -= buildingSize.y / 2;</b>
+<b class="nc">&nbsp;            topRight = new Point(btmLeft.x + buildingSize.x - 1, btmLeft.y + buildingSize.y - 1);</b>
+<b class="nc">&nbsp;            canBuild = buildingManager.isBuildable(btmLeft, topRight, getMapTiles());</b>
+<b class="nc">&nbsp;            if (selectedBuilding != null) {</b>
+<b class="nc">&nbsp;                selectedBuilding.location = btmLeft;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            buildingManager.setPreviewBuilding(selectedBuilding);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Render the tile highlight
+<b class="nc">&nbsp;        if (selectedBuilding != null) {</b>
+<b class="nc">&nbsp;            tileHighlightBatch.setProjectionMatrix(camera.combined);</b>
+<b class="nc">&nbsp;            tileHighlightBatch.begin();</b>
+<b class="nc">&nbsp;            highlightRegion(btmLeft, topRight, canBuild ? tileHighlight : errTileHighlight);</b>
+<b class="nc">&nbsp;            tileHighlightBatch.end();</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // render buildings after all map related rendering
+<b class="nc">&nbsp;        buildingBatch.setProjectionMatrix(camera.combined);</b>
+<b class="nc">&nbsp;        buildingBatch.begin();</b>
+<b class="nc">&nbsp;        buildingManager.render(buildingBatch);</b>
+<b class="nc">&nbsp;        buildingBatch.end();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void addDir(int x, int y) {
+<b class="nc">&nbsp;        this.camX += x;</b>
+<b class="nc">&nbsp;        this.camY += y;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Resizes the gameplay (usually to fit the size of the window)
+&nbsp;     * This is mostly done by resizing the relevant viewports.
+&nbsp;     *
+&nbsp;     * @param width  - The new width of the window
+&nbsp;     * @param height - The new height of the window
+&nbsp;     */
+&nbsp;    public void resize(int width, int height) {
+<b class="nc">&nbsp;        if (camera.viewportHeight &gt; 0) {</b>
+<b class="nc">&nbsp;            camera.zoom *= (float) camera.viewportHeight / height;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        viewport.update(width, height);</b>
+<b class="nc">&nbsp;        minZoom = 10f / camera.viewportHeight;</b>
+<b class="nc">&nbsp;        maxZoom = 100f / camera.viewportHeight;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Pans the view of the game by translating the camera by a multiple of the
+&nbsp;     * vector (x, y).
+&nbsp;     * The view will continue to move in the same direction for a short period
+&nbsp;     * afterwards
+&nbsp;     * Camera bounded to the dimensions of the map
+&nbsp;     * 
+&nbsp;     * @param x - The distance to pan horizontally
+&nbsp;     * @param y - The distance to pan vertically
+&nbsp;     */
+&nbsp;    public void pan(float x, float y) {
+<b class="nc">&nbsp;        camPosition.add(x * camera.zoom, y * camera.zoom);</b>
+<b class="nc">&nbsp;        if (camPosition.x &lt; 0) {</b>
+<b class="nc">&nbsp;            camPosition.x = 0;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (camPosition.y &lt; -75) {</b>
+<b class="nc">&nbsp;            camPosition.y = -75;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (camPosition.x &gt; 300) {</b>
+<b class="nc">&nbsp;            camPosition.x = 300;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (camPosition.y &gt; 75) {</b>
+<b class="nc">&nbsp;            camPosition.y = 75;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        if (Gdx.input.isButtonPressed(0) || Gdx.input.isButtonPressed(1)</b>
+<b class="nc">&nbsp;                || Gdx.input.isButtonPressed(2)) {</b>
+<b class="nc">&nbsp;            panVelocity.set(x * timeStepSize / Gdx.graphics.getDeltaTime(),</b>
+<b class="nc">&nbsp;                    y * timeStepSize / Gdx.graphics.getDeltaTime());</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Pans the view of the game by translating the camera by a multiple of the
+&nbsp;     * vector (x, y).
+&nbsp;     *
+&nbsp;     * @param x - The distance to pan horizontally
+&nbsp;     * @param y - The distance to pan vertically
+&nbsp;     */
+&nbsp;    public void panWithoutInertia(float x, float y) {
+<b class="nc">&nbsp;        camPosition.add(x * camera.zoom, y * camera.zoom);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Tell the game to zoom in or out by a certain amount.
+&nbsp;     *
+&nbsp;     * @param amount - The speed to zoom at; negative to zoom in and positive to
+&nbsp;     *               zoom out
+&nbsp;     */
+&nbsp;    public void zoom(float amount) {
+<b class="nc">&nbsp;        final float zoomAcceleration = 0.0003f;</b>
+<b class="nc">&nbsp;        zoomVelocity += amount * zoomAcceleration;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adjusts the zoom of the camera based on the zoomVelocity.
+&nbsp;     * Also slightly reduces the zoomVelocity to prevent infinite zooming
+&nbsp;     * Limits the zoom of the camera to be between minZoom and maxZoom
+&nbsp;     */
+&nbsp;    private void updateZoom() {
+<b class="nc">&nbsp;        zoomDt += Gdx.graphics.getDeltaTime();</b>
+<b class="nc">&nbsp;        while (zoomDt &gt; timeStepSize) {</b>
+<b class="nc">&nbsp;            zoomDt -= timeStepSize;</b>
+<b class="nc">&nbsp;            zoomVelocity *= 0.987f;</b>
+<b class="nc">&nbsp;            float scaleFactor = (1f + zoomVelocity * (float) Math.sqrt(camera.zoom) / camera.zoom);</b>
+<b class="nc">&nbsp;            if (camera.zoom * scaleFactor &lt; minZoom) {</b>
+<b class="nc">&nbsp;                scaleFactor = minZoom / camera.zoom;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            if (camera.zoom * scaleFactor &gt; maxZoom) {</b>
+<b class="nc">&nbsp;                scaleFactor = maxZoom / camera.zoom;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            panWithoutInertia(</b>
+<b class="nc">&nbsp;                    Gdx.input.getX() - camera.viewportWidth / 2, camera.viewportHeight / 2 - Gdx.input.getY());</b>
+<b class="nc">&nbsp;            camera.zoom *= scaleFactor;</b>
+<b class="nc">&nbsp;            panWithoutInertia(</b>
+<b class="nc">&nbsp;                    camera.viewportWidth / 2 - Gdx.input.getX(), Gdx.input.getY() - camera.viewportHeight / 2);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Adjusts the panning of the camera based on the panVelocity.
+&nbsp;     * Also slightly reduces the panVelocity to prevent infinite panning
+&nbsp;     */
+&nbsp;    private void updatePan() {
+<b class="nc">&nbsp;        panDt += Gdx.graphics.getDeltaTime();</b>
+<b class="nc">&nbsp;        while (panDt &gt; timeStepSize) {</b>
+<b class="nc">&nbsp;            panDt -= timeStepSize;</b>
+<b class="nc">&nbsp;            panVelocity.scl(0.987f);</b>
+<b class="nc">&nbsp;            if (!(Gdx.input.isButtonPressed(0) || Gdx.input.isButtonPressed(1)</b>
+<b class="nc">&nbsp;                    || Gdx.input.isButtonPressed(2))) {</b>
+<b class="nc">&nbsp;                panWithoutInertia(panVelocity.x, panVelocity.y);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the maximum allowed zoom level.
+&nbsp;     *
+&nbsp;     * @return - A float holding the mazimum allowed zoom level
+&nbsp;     */
+&nbsp;    public float getMaxZoom() {
+<b class="nc">&nbsp;        return maxZoom;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the current zoom level.
+&nbsp;     *
+&nbsp;     * @return - A float holding the current zoom level
+&nbsp;     */
+&nbsp;    public float getZoom() {
+<b class="nc">&nbsp;        return camera.zoom;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Return the (x, y) co-ordinates of the grid cell that the mouse pointer
+&nbsp;     * is currently within.
+&nbsp;     *
+&nbsp;     * @return - A Vector2 containing the position of the cursor in grid space
+&nbsp;     */
+&nbsp;    public Point getCursorGridPos() {
+<b class="nc">&nbsp;        Vector3 unprojected = camera.unproject(</b>
+<b class="nc">&nbsp;                new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0)).mul(invIsoTransform);</b>
+<b class="nc">&nbsp;        unprojected.add(0.45f, -0.45f, 0f);</b>
+<b class="nc">&nbsp;        return new Point((int) Math.floor(unprojected.x), (int) Math.floor(unprojected.y));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Highlight a rectangular region about the cursor with a given highlight
+&nbsp;     * texture.
+&nbsp;     *
+&nbsp;     * @param btmLeft          - The bottom left edge of the region
+&nbsp;     * @param topRight         - The top right edge of the region
+&nbsp;     * @param highlightTexture - The texture to highlight the squares with
+&nbsp;     */
+&nbsp;    public void highlightRegion(Point btmLeft, Point topRight, Texture highlightTexture) {
+<b class="nc">&nbsp;        Point tilePos = new Point();</b>
+<b class="nc">&nbsp;        for (tilePos.x = btmLeft.x; tilePos.x &lt;= topRight.x; tilePos.x++) {</b>
+<b class="nc">&nbsp;            for (tilePos.y = btmLeft.y; tilePos.y &lt;= topRight.y; tilePos.y++) {</b>
+<b class="nc">&nbsp;                Vector3 worldPos = gridPosToWorldPos(tilePos);</b>
+<b class="nc">&nbsp;                tileHighlightBatch.draw(highlightTexture, worldPos.x, worldPos.y, 1, 1);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gets the camera position as a 2D vector.
+&nbsp;     *
+&nbsp;     * @return a Vector2 holding the position of the camera
+&nbsp;     */
+&nbsp;    public Vector2 getCameraPos() {
+<b class="nc">&nbsp;        return new Vector2(camera.position.x, camera.position.y);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Transforms a point from grid space to world space.
+&nbsp;     *
+&nbsp;     * @param gridPos - The coordinates of the point in grid space
+&nbsp;     * @return - The coordinates of the point in world space
+&nbsp;     */
+&nbsp;    private Vector3 gridPosToWorldPos(Point gridPos) {
+<b class="nc">&nbsp;        return new Vector3(</b>
+<b class="nc">&nbsp;                (float) Math.floor(gridPos.x), (float) Math.floor(gridPos.y), 0f).mul(isoTransform);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Calculates the matrices needed to transform a point into and outof isometric
+&nbsp;     * world space.
+&nbsp;     */
+&nbsp;    private void initIsometricTransform() {
+&nbsp;        // create the isometric transform
+<b class="nc">&nbsp;        isoTransform = new Matrix4();</b>
+<b class="nc">&nbsp;        isoTransform.idt();</b>
+&nbsp;
+&nbsp;        // isoTransform.translate(0, 32, 0);
+<b class="nc">&nbsp;        isoTransform.scale((float) (Math.sqrt(2.0) / 2.0), (float) (Math.sqrt(2.0) / 4.0), 1.0f);</b>
+<b class="nc">&nbsp;        isoTransform.rotate(0.0f, 0.0f, 1.0f, -45);</b>
+&nbsp;
+&nbsp;        // ... and the inverse matrix
+<b class="nc">&nbsp;        invIsoTransform = new Matrix4(isoTransform);</b>
+<b class="nc">&nbsp;        invIsoTransform.inv();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public TiledMapTileLayer getMapTiles() {
+<b class="nc">&nbsp;        return (TiledMapTileLayer) map.getLayers().get(0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Place a building onto the map, called when a tile is clicked and building
+&nbsp;     * mode is enabled.
+&nbsp;     *
+&nbsp;     * @return - True if building could be done successfully, false otherwise.
+&nbsp;     */
+&nbsp;    public boolean placeBuilding() {
+<b class="nc">&nbsp;        if (!canBuild) {</b>
+<b class="nc">&nbsp;            popupStatus = &quot;invalid&quot;;</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (!gameScreen.buildCheck()) {</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        buildingManager.placeBuilding(</b>
+&nbsp;                new Building(
+&nbsp;                        selectedBuilding.texture, selectedBuilding.textureScale, selectedBuilding.textureOffset,
+<b class="nc">&nbsp;                        selectedBuilding.location.getNewPoint(), selectedBuilding.size.getNewPoint(),</b>
+<b class="nc">&nbsp;                        selectedBuilding.flipped, selectedBuilding.type, selectedBuilding.name, selectedBuilding.cost,</b>
+&nbsp;                        selectedBuilding.rep));
+<b class="nc">&nbsp;        gameScreen.calcBuild(selectedBuilding.texture.toString(), true);</b>
+<b class="nc">&nbsp;        if (AchievementManager.getInstance().getAchievements().get(0).isUnlocked() == false) {</b>
+<b class="nc">&nbsp;            gameScreen.addMoneyRep(1500, 0);</b>
+<b class="nc">&nbsp;            String reward = &quot;&lt;html&gt;&lt;p&gt;Achievement: First building placed&lt;/p&gt;&lt;p&gt;You have received $1500&lt;/p&gt;&lt;/html&gt;&quot;;</b>
+<b class="nc">&nbsp;            AchievementManager.getInstance().setReward(reward);</b>
+<b class="nc">&nbsp;            AchievementManager.getInstance().checkAchievement(&quot;FIRST_BUILDING_PLACED&quot;);</b>
+<b class="nc">&nbsp;            popupStatus = &quot;reward&quot;;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        selectedBuilding = null;</b>
+&nbsp;
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean placeBuildingOld() {
+<b class="nc">&nbsp;        if (!canBuild) {</b>
+<b class="nc">&nbsp;            setBuildingNull(lastLocation, flipped, lastSize);</b>
+<b class="nc">&nbsp;            popupStatus = &quot;invalid&quot;;</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        if (!gameScreen.buildCheckOld()) {</b>
+<b class="nc">&nbsp;            setBuildingNull(lastLocation, flipped, lastSize);</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="nc">&nbsp;        buildingManager.placeBuilding(</b>
+&nbsp;                new Building(
+&nbsp;                        selectedBuilding.texture, selectedBuilding.textureScale, selectedBuilding.textureOffset,
+<b class="nc">&nbsp;                        selectedBuilding.location.getNewPoint(), selectedBuilding.size.getNewPoint(),</b>
+<b class="nc">&nbsp;                        selectedBuilding.flipped, selectedBuilding.type, selectedBuilding.name, selectedBuilding.cost,</b>
+&nbsp;                        selectedBuilding.rep));
+<b class="nc">&nbsp;        gameScreen.calcBuild(selectedBuilding.texture.toString(), false);</b>
+&nbsp;
+<b class="nc">&nbsp;        selectedBuilding = null;</b>
+&nbsp;
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPlaced(boolean placed) {
+<b class="nc">&nbsp;        this.placedBuild = placed;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean getPlaced() {
+<b class="nc">&nbsp;        return this.placedBuild;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Returns the number of buildings of a certain type that have been placed
+&nbsp;     * in the world.
+&nbsp;     *
+&nbsp;     * @param type - The type of building
+&nbsp;     * @return - An int holding the number of that building that have been placed
+&nbsp;     */
+&nbsp;    public int getBuildingCount(BuildingType type) {
+<b class="nc">&nbsp;        return buildingManager.getBuildingCount(type);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setBuildingNull(Point location, boolean flip, Point size) {
+<b class="nc">&nbsp;        if (selectedBuilding != null &amp;&amp; getPlaced() == true) {</b>
+<b class="nc">&nbsp;            placeBuilding(location, flip, size);</b>
+<b class="nc">&nbsp;            setPlaced(false);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            selectedBuilding = null;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPopup(String option) {
+<b class="nc">&nbsp;        this.popupStatus = option;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getPopup() {
+<b class="nc">&nbsp;        return this.popupStatus;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean placeBuilding(Point location, boolean flip, Point size) {
+<b class="nc">&nbsp;        buildingManager.placeBuilding(</b>
+&nbsp;                new Building(
+&nbsp;                        selectedBuilding.texture, selectedBuilding.textureScale, selectedBuilding.textureOffset,
+<b class="nc">&nbsp;                        location, size, flip, selectedBuilding.type, selectedBuilding.name, selectedBuilding.cost,</b>
+&nbsp;                        selectedBuilding.rep));
+&nbsp;
+<b class="nc">&nbsp;        selectedBuilding = null;</b>
+&nbsp;
+<b class="nc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setLocation(Point location) {
+<b class="nc">&nbsp;        this.lastLocation = location;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Point getLocation() {
+<b class="nc">&nbsp;        return this.lastLocation;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Boolean getFlipped() {
+<b class="nc">&nbsp;        return this.flipped;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setFlipped(Boolean flipped) {
+<b class="nc">&nbsp;        this.flipped = flipped;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Point getSize() {
+<b class="nc">&nbsp;        return this.lastSize;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSize(Point size) {
+<b class="nc">&nbsp;        this.lastSize = size;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Set the camera position to the starting point, rebuild the isometry matrices
+&nbsp;     * and deselect the selected building.
+&nbsp;     */
+&nbsp;    public void reset() {
+<b class="nc">&nbsp;        camPosition = new Vector2(150f, 0f);</b>
+<b class="nc">&nbsp;        panVelocity = new Vector2(0f, 0f);</b>
+<b class="nc">&nbsp;        zoomVelocity = 0f;</b>
+<b class="nc">&nbsp;        panDt = 0f;</b>
+<b class="nc">&nbsp;        zoomDt = 0f;</b>
+<b class="nc">&nbsp;        camera.zoom = 0.05f;</b>
+<b class="nc">&nbsp;        initIsometricTransform();</b>
+<b class="nc">&nbsp;        buildingManager = new BuildingManager(isoTransform);</b>
+<b class="nc">&nbsp;        selectedBuilding = null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Building getBuildingAt(Point gridPos) {
+<b class="nc">&nbsp;        for (Building building : buildingManager.getBuildings()) {</b>
+<b class="nc">&nbsp;            Point btmLeft = building.location;</b>
+<b class="nc">&nbsp;            Point topRight = new Point(btmLeft.x + building.size.x - 1, btmLeft.y + building.size.y - 1);</b>
+<b class="nc">&nbsp;            if (gridPos.x &gt;= btmLeft.x &amp;&amp; gridPos.x &lt;= topRight.x &amp;&amp;</b>
+&nbsp;                    gridPos.y &gt;= btmLeft.y &amp;&amp; gridPos.y &lt;= topRight.y) {
+&nbsp;
+<b class="nc">&nbsp;                return building;</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public float getMultiplier() {
+<b class="nc">&nbsp;        return this.multiplier;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

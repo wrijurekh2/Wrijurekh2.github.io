@@ -1,0 +1,202 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MusicManager</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim</a>
+</div>
+
+<h1>Coverage Summary for Class: MusicManager (io.github.unisim)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MusicManager</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.audio.Music;
+&nbsp;
+&nbsp;public class MusicManager {
+&nbsp;    private Music menuMusic;
+&nbsp;    private Music gameMusic;
+&nbsp;    private Music CurrentMusic;
+<b class="nc">&nbsp;    private float volume = 0.05f;</b>
+&nbsp;
+&nbsp;    //create variables to store the audio files
+<b class="nc">&nbsp;    public MusicManager() {</b>
+<b class="nc">&nbsp;        menuMusic = Gdx.audio.newMusic(Gdx.files.internal(&quot;Music/menu_music.mp3&quot;));</b>
+<b class="nc">&nbsp;        gameMusic = Gdx.audio.newMusic(Gdx.files.internal(&quot;Music/game_music.mp3&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        menuMusic.setLooping(true);</b>
+<b class="nc">&nbsp;        gameMusic.setLooping(true);</b>
+&nbsp;
+<b class="nc">&nbsp;        menuMusic.setVolume(volume);</b>
+<b class="nc">&nbsp;        gameMusic.setVolume(volume);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    //called when the menu music needs to start playing
+&nbsp;    public void playMenuMusic() {
+<b class="nc">&nbsp;        if (CurrentMusic == menuMusic &amp;&amp; menuMusic.isPlaying()) {</b>
+&nbsp;            return; // Do nothing if menu music is already playing
+&nbsp;        }
+<b class="nc">&nbsp;        stopMusic();</b>
+<b class="nc">&nbsp;        CurrentMusic = menuMusic;</b>
+<b class="nc">&nbsp;        menuMusic.play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //called when the game music needs to start playing
+&nbsp;    public void playGameMusic() {
+<b class="nc">&nbsp;        if (CurrentMusic != null) {</b>
+<b class="nc">&nbsp;            CurrentMusic.stop();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        CurrentMusic = gameMusic;</b>
+<b class="nc">&nbsp;        CurrentMusic.play();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //call to pause the current music
+&nbsp;    public void pauseMusic() {
+<b class="nc">&nbsp;        if (CurrentMusic != null &amp;&amp; CurrentMusic.isPlaying()) {</b>
+<b class="nc">&nbsp;            CurrentMusic.pause();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //call to unpause the music
+&nbsp;    public void resumeMusic() {
+<b class="nc">&nbsp;        if (CurrentMusic != null &amp;&amp; !CurrentMusic.isPlaying()) {</b>
+<b class="nc">&nbsp;            CurrentMusic.play();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //call to end the current music
+&nbsp;    public void stopMusic() {
+<b class="nc">&nbsp;        if (CurrentMusic != null) {</b>
+<b class="nc">&nbsp;            CurrentMusic.stop();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    //call to set the volume
+&nbsp;    public void setVolume(float volume) {
+<b class="nc">&nbsp;        if (CurrentMusic != null) {</b>
+<b class="nc">&nbsp;            CurrentMusic.setVolume(volume);</b>
+<b class="nc">&nbsp;            this.volume = volume;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public Music getMusic() {
+<b class="nc">&nbsp;        return CurrentMusic;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public float getVolume() {
+<b class="nc">&nbsp;        return volume;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void dispose() {
+<b class="nc">&nbsp;        menuMusic.dispose();</b>
+<b class="nc">&nbsp;        gameMusic.dispose();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

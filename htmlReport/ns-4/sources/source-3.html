@@ -1,0 +1,329 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GameOverScreen</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim.ui</a>
+</div>
+
+<h1>Coverage Summary for Class: GameOverScreen (io.github.unisim.ui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameOverScreen</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/47)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">GameOverScreen$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">GameOverScreen$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">GameOverScreen$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/57)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim.ui;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.graphics.GL20;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.graphics.g2d.BitmapFont;
+&nbsp;import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.Stage;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Image;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Label;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Table;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+&nbsp;import io.github.unisim.GameState;
+&nbsp;
+&nbsp;/**
+&nbsp; * GameOverScreen displays data such as buildings placed, score and buttons to
+&nbsp; * see the leaderboard, achievements or go back to main menu
+&nbsp; * 
+&nbsp; */
+&nbsp;public class GameOverScreen implements Screen {
+&nbsp;    private Stage stage;
+<b class="nc">&nbsp;    private Skin altskin = GameState.altSkin;</b>
+&nbsp;    private SpriteBatch batch;
+&nbsp;    private BitmapFont titleFont;
+&nbsp;    private BitmapFont dataFont;
+&nbsp;    private Label titleLabel;
+&nbsp;    private Label dataLabel;
+&nbsp;
+&nbsp;    private TextButton MainMenuButton;
+&nbsp;    private TextButton LeaderboardButton;
+&nbsp;    private TextButton AchievementButton;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Constructor: Initialises the GameOverScreen UI elements.
+&nbsp;     */
+<b class="nc">&nbsp;    public GameOverScreen() {</b>
+<b class="nc">&nbsp;        batch = new SpriteBatch();</b>
+<b class="nc">&nbsp;        titleFont = new BitmapFont(Gdx.files.internal(&quot;ui/score.fnt&quot;));</b>
+<b class="nc">&nbsp;        dataFont = new BitmapFont(Gdx.files.internal(&quot;ui/score.fnt&quot;));</b>
+&nbsp;
+<b class="nc">&nbsp;        stage = new Stage();</b>
+&nbsp;
+&nbsp;        // Create an Image for the background
+<b class="nc">&nbsp;        Image backgroundImage = new Image(new Texture(Gdx.files.internal(&quot;ui/gameoverbackground.png&quot;)));</b>
+<b class="nc">&nbsp;        backgroundImage.setFillParent(true); // Fill the screen with image</b>
+<b class="nc">&nbsp;        stage.addActor(backgroundImage); // Add the background to the stage</b>
+&nbsp;
+<b class="nc">&nbsp;        Label.LabelStyle titleStyle = new Label.LabelStyle(titleFont, null);</b>
+<b class="nc">&nbsp;        Label.LabelStyle dataStyle = new Label.LabelStyle(dataFont, null);</b>
+<b class="nc">&nbsp;        titleLabel = new Label(&quot;Game Over&quot;, titleStyle);</b>
+<b class="nc">&nbsp;        titleLabel.setFontScale(2.0f);</b>
+<b class="nc">&nbsp;        dataLabel = new Label(&quot;&quot;, dataStyle);</b>
+<b class="nc">&nbsp;        dataLabel.setFontScale(0.8f);</b>
+&nbsp;
+<b class="nc">&nbsp;        MainMenuButton = new TextButton(&quot;Main Menu&quot;, altskin);</b>
+<b class="nc">&nbsp;        AchievementButton = new TextButton(&quot;Achievements&quot;, altskin);</b>
+<b class="nc">&nbsp;        LeaderboardButton = new TextButton(&quot;Leaderboard&quot;, altskin);</b>
+&nbsp;
+&nbsp;        // Adds listeners to all of the buttons
+<b class="nc">&nbsp;        MainMenuButton.addListener(new ClickListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+&nbsp;                // Change to start screen
+<b class="nc">&nbsp;                GameState.currentScreen = GameState.startScreen;</b>
+&nbsp;            }
+&nbsp;
+&nbsp;        });
+&nbsp;
+<b class="nc">&nbsp;        AchievementButton.addListener(new ClickListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+&nbsp;                // Change to achievement screen
+<b class="nc">&nbsp;                GameState.achievementScreen = new AchievementScreen(); // Refresh achievements</b>
+<b class="nc">&nbsp;                GameState.pushScreen(GameState.achievementScreen);</b>
+<b class="nc">&nbsp;                GameState.currentScreen = GameState.achievementScreen;</b>
+&nbsp;            }
+&nbsp;        });
+<b class="nc">&nbsp;        LeaderboardButton.addListener(new ClickListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+&nbsp;                // Change to leaderboard screen
+<b class="nc">&nbsp;                GameState.leaderboardScreen = new LeaderboardScreen(); // Refresh leaderboard</b>
+<b class="nc">&nbsp;                GameState.pushScreen(GameState.leaderboardScreen);</b>
+<b class="nc">&nbsp;                GameState.currentScreen = GameState.leaderboardScreen;</b>
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+&nbsp;        // Adding UI elements to the table and then the stage
+<b class="nc">&nbsp;        Table table = new Table();</b>
+<b class="nc">&nbsp;        table.setFillParent(true);</b>
+<b class="nc">&nbsp;        table.center().center();</b>
+&nbsp;
+<b class="nc">&nbsp;        table.add(titleLabel).padBottom(120).padTop(160);</b>
+<b class="nc">&nbsp;        table.row();</b>
+&nbsp;
+<b class="nc">&nbsp;        table.add(MainMenuButton).center().width(275).height(50).padBottom(20);</b>
+<b class="nc">&nbsp;        table.row();</b>
+<b class="nc">&nbsp;        table.add(AchievementButton).center().width(275).height(50).padBottom(20);</b>
+<b class="nc">&nbsp;        table.row();</b>
+<b class="nc">&nbsp;        table.add(LeaderboardButton).center().width(275).height(50);</b>
+<b class="nc">&nbsp;        table.row();</b>
+<b class="nc">&nbsp;        table.add(dataLabel).left().padTop(30).padRight(850);</b>
+&nbsp;
+<b class="nc">&nbsp;        stage.addActor(table);</b>
+&nbsp;
+<b class="nc">&nbsp;        Gdx.input.setInputProcessor(stage);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void show() {
+<b class="nc">&nbsp;        Gdx.input.setInputProcessor(stage);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void render(float delta) {
+&nbsp;        // Clear screen
+<b class="nc">&nbsp;        Gdx.gl.glClearColor(0, 0, 0, 1);</b>
+<b class="nc">&nbsp;        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);</b>
+&nbsp;
+&nbsp;        // Update data label with game over data
+<b class="nc">&nbsp;        dataLabel.setText(GameState.gameOverData.getData());</b>
+&nbsp;
+&nbsp;        // Draws the stage
+<b class="nc">&nbsp;        stage.act(delta);</b>
+<b class="nc">&nbsp;        stage.draw();</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void resize(int width, int height) {
+<b class="nc">&nbsp;        stage.getViewport().update(width, height, true);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void pause() {
+&nbsp;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void resume() {
+<b class="nc">&nbsp;        Gdx.input.setInputProcessor(stage);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void hide() {
+&nbsp;
+<b class="nc">&nbsp;    }</b>
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public void dispose() {
+<b class="nc">&nbsp;        stage.dispose();</b>
+<b class="nc">&nbsp;        batch.dispose();</b>
+&nbsp;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

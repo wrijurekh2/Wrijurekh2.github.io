@@ -1,0 +1,427 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > InfoBar</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim.ui</a>
+</div>
+
+<h1>Coverage Summary for Class: InfoBar (io.github.unisim.ui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">InfoBar</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/109)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">InfoBar$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">InfoBar$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">InfoBar$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/123)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim.ui;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.Stage;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Image;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Label;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Table;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+&nbsp;import com.badlogic.gdx.utils.Align;
+&nbsp;import io.github.unisim.*;
+&nbsp;import io.github.unisim.building.BuildingType;
+&nbsp;import io.github.unisim.world.World;
+&nbsp;
+&nbsp;/**
+&nbsp; * Create a Title bar with basic info.
+&nbsp; */
+&nbsp;public class InfoBar {
+&nbsp;  private ShapeActor bar;
+<b class="nc">&nbsp;  private Table infoTable = new Table();</b>
+<b class="nc">&nbsp;  private Table titleTable = new Table();</b>
+<b class="nc">&nbsp;  private Table buildingCountersTable = new Table();</b>
+<b class="nc">&nbsp;  private Label[] buildingCounterLabels = new Label[4];</b>
+<b class="nc">&nbsp;  private Skin skin = new Skin(Gdx.files.internal(&quot;ui/uiskin.json&quot;));</b>
+&nbsp;  private Label scoreLabel;
+<b class="nc">&nbsp;  private Label titleLabel = new Label(&quot;UniSim&quot;, skin);</b>
+&nbsp;  private Label realTimeLabel;
+&nbsp;  private Label gameTimeLabel;
+&nbsp;  private Label eventTimeLabel;
+&nbsp;  private Label moneyLabel;
+&nbsp;  private Label repLabel;
+<b class="nc">&nbsp;  private Texture pauseTexture = new Texture(&quot;ui/pause.png&quot;);</b>
+<b class="nc">&nbsp;  private Texture playTexture = new Texture(&quot;ui/play.png&quot;);</b>
+<b class="nc">&nbsp;  private Texture gearTexture = new Texture(&quot;ui/gear.png&quot;);</b>
+<b class="nc">&nbsp;  private Image pauseImage = new Image(pauseTexture);</b>
+<b class="nc">&nbsp;  private Image playImage = new Image(playTexture);</b>
+<b class="nc">&nbsp;  private Image gearImage = new Image(gearTexture);</b>
+&nbsp;  private Timer timer;
+&nbsp;  private MoneyClass money;
+&nbsp;  private ReputationClass rep;
+&nbsp;  private Score score;
+&nbsp;  private GameScreen gameScreen;
+&nbsp;  private Cell&lt;Label&gt; realTimeLabelCell;
+&nbsp;  private Cell&lt;Label&gt; gameTimeLabelCell;
+&nbsp;  private Cell&lt;Label&gt; eventTimeLabelCell;
+&nbsp;  private Cell&lt;Label&gt; moneyLabelCell;
+&nbsp;  private Cell&lt;Label&gt; repLabelCell;
+&nbsp;  private Cell&lt;Label&gt; scoreLabelCell;
+&nbsp;  private Cell&lt;Image&gt; pauseButtonCell;
+&nbsp;  private Cell&lt;Table&gt; buildingCountersTableCell;
+&nbsp;  private Cell&lt;Image&gt; settingsButtonCell;
+&nbsp;  @SuppressWarnings(&quot;rawtypes&quot;)
+&nbsp;  private Cell[] buildingCounterCells;
+&nbsp;  private World world;
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Create a new infoBar and draws its&#39; components onto the provided stage.
+&nbsp;   *
+&nbsp;   * @param stage      - The stage on which to draw the InfoBar.
+&nbsp;   * @param timer      - The game timer
+&nbsp;   * @param world      - Current world
+&nbsp;   * @param score      - Score class
+&nbsp;   * @param moneyClass - Money class
+&nbsp;   * @param repClass   - Reputation class
+&nbsp;   * @param gameScreen - Current game screen
+&nbsp;   */
+&nbsp;  public InfoBar(Stage stage, Timer timer, World world, Score score, MoneyClass moneyClass,
+<b class="nc">&nbsp;      ReputationClass repClass, GameScreen gameScreen) {</b>
+<b class="nc">&nbsp;    this.timer = timer;</b>
+<b class="nc">&nbsp;    this.world = world;</b>
+<b class="nc">&nbsp;    this.money = moneyClass;</b>
+<b class="nc">&nbsp;    this.rep = repClass;</b>
+<b class="nc">&nbsp;    this.score = score;</b>
+<b class="nc">&nbsp;    this.gameScreen = gameScreen;</b>
+<b class="nc">&nbsp;    buildingCounterCells = new Cell[4];</b>
+&nbsp;
+&nbsp;    // Building counter table
+<b class="nc">&nbsp;    for (int i = 0; i &lt; 4; i++) {</b>
+<b class="nc">&nbsp;      buildingCounterLabels[i] = new Label(&quot;&quot;, skin);</b>
+&nbsp;    }
+<b class="nc">&nbsp;    buildingCounterCells[0] = buildingCountersTable.add(buildingCounterLabels[0]);</b>
+<b class="nc">&nbsp;    buildingCounterCells[1] = buildingCountersTable.add(buildingCounterLabels[1]);</b>
+<b class="nc">&nbsp;    buildingCountersTable.row();</b>
+<b class="nc">&nbsp;    buildingCounterCells[2] = buildingCountersTable.add(buildingCounterLabels[2]);</b>
+<b class="nc">&nbsp;    buildingCounterCells[3] = buildingCountersTable.add(buildingCounterLabels[3]);</b>
+&nbsp;
+&nbsp;    // Info Table
+<b class="nc">&nbsp;    realTimeLabel = new Label(timer.getRemTime(), skin);</b>
+<b class="nc">&nbsp;    gameTimeLabel = new Label(timer.getGameTime(), skin);</b>
+<b class="nc">&nbsp;    moneyLabel = new Label(&quot;$&quot; + money.getMoney(), skin);</b>
+<b class="nc">&nbsp;    repLabel = new Label(rep.getRep() + &quot;%&quot;, skin);</b>
+<b class="nc">&nbsp;    eventTimeLabel = new Label(&quot;Next event in: &quot; + timer.getCurrRemSeconds(), skin);</b>
+<b class="nc">&nbsp;    scoreLabel = new Label(&quot;Score: &quot; + this.score.getScore(), skin);</b>
+<b class="nc">&nbsp;    infoTable.center().center();</b>
+<b class="nc">&nbsp;    pauseButtonCell = infoTable.add(playImage).align(Align.center);</b>
+<b class="nc">&nbsp;    settingsButtonCell = infoTable.add(gearImage).align(Align.center);</b>
+<b class="nc">&nbsp;    realTimeLabelCell = infoTable.add(realTimeLabel).align(Align.center);</b>
+<b class="nc">&nbsp;    gameTimeLabelCell = infoTable.add(gameTimeLabel).align(Align.center);</b>
+<b class="nc">&nbsp;    moneyLabelCell = infoTable.add(moneyLabel).align(Align.center);</b>
+<b class="nc">&nbsp;    repLabelCell = infoTable.add(repLabel).align(Align.center);</b>
+<b class="nc">&nbsp;    infoTable.add(titleLabel).expandX().align(Align.center).padLeft(100);</b>
+<b class="nc">&nbsp;    eventTimeLabelCell = infoTable.add(eventTimeLabel).align(Align.right);</b>
+<b class="nc">&nbsp;    scoreLabelCell = infoTable.add(scoreLabel).align(Align.right);</b>
+<b class="nc">&nbsp;    buildingCountersTableCell = infoTable.add(buildingCountersTable).align(Align.right).padLeft(130);</b>
+&nbsp;
+&nbsp;    // Settings button
+<b class="nc">&nbsp;    gearImage.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+<b class="nc">&nbsp;        if (world.selectedBuilding == null) {</b>
+<b class="nc">&nbsp;          GameState.pushScreen(GameState.settingScreen);</b>
+<b class="nc">&nbsp;          GameState.musicManager.pauseMusic();</b>
+<b class="nc">&nbsp;          GameState.settingScreen.render(Gdx.graphics.getDeltaTime());</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;          world.setPopup(&quot;building&quot;);</b>
+&nbsp;        }
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Pause button
+<b class="nc">&nbsp;    pauseImage.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+<b class="nc">&nbsp;        GameState.paused = true;</b>
+<b class="nc">&nbsp;        GameState.musicManager.pauseMusic();</b>
+<b class="nc">&nbsp;        pauseButtonCell.setActor(playImage);</b>
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Play button
+<b class="nc">&nbsp;    playImage.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+<b class="nc">&nbsp;        GameState.paused = false;</b>
+<b class="nc">&nbsp;        GameState.musicManager.resumeMusic();</b>
+<b class="nc">&nbsp;        pauseButtonCell.setActor(pauseImage);</b>
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Add tables to the stage
+<b class="nc">&nbsp;    bar = new ShapeActor(GameState.UIPrimaryColour);</b>
+<b class="nc">&nbsp;    stage.addActor(bar);</b>
+<b class="nc">&nbsp;    stage.addActor(infoTable);</b>
+<b class="nc">&nbsp;    stage.addActor(titleTable);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Called when the UI needs to be updated, usually on every frame.
+&nbsp;   */
+&nbsp;  public void update() {
+<b class="nc">&nbsp;    realTimeLabel.setText(timer.getRemTime());</b>
+<b class="nc">&nbsp;    gameTimeLabel.setText(timer.getGameTime());</b>
+<b class="nc">&nbsp;    moneyLabel.setText(&quot;Money: $&quot; + money.getMoney());</b>
+<b class="nc">&nbsp;    repLabel.setText(&quot;Reputation: &quot; + rep.getRep() + &quot;%&quot;);</b>
+<b class="nc">&nbsp;    eventTimeLabel.setText(&quot;Next event in: &quot; + timer.getCurrRemSeconds());</b>
+<b class="nc">&nbsp;    scoreLabel.setText(&quot;Score: &quot; + this.score.getScore());</b>
+<b class="nc">&nbsp;    buildingCounterLabels[0].setText(&quot;Recreation: &quot;</b>
+<b class="nc">&nbsp;        + Integer.toString(world.getBuildingCount(BuildingType.RECREATION)));</b>
+<b class="nc">&nbsp;    buildingCounterLabels[1].setText(&quot;Learning: &quot;</b>
+<b class="nc">&nbsp;        + Integer.toString(world.getBuildingCount(BuildingType.LEARNING)));</b>
+<b class="nc">&nbsp;    buildingCounterLabels[2].setText(&quot;Eating: &quot;</b>
+<b class="nc">&nbsp;        + Integer.toString(world.getBuildingCount(BuildingType.EATING)));</b>
+<b class="nc">&nbsp;    buildingCounterLabels[3].setText(&quot;Sleeping: &quot;</b>
+<b class="nc">&nbsp;        + Integer.toString(world.getBuildingCount(BuildingType.SLEEPING)));</b>
+<b class="nc">&nbsp;    GameState.gameOverData.setBuildings(BuildingType.RECREATION, world.getBuildingCount(BuildingType.RECREATION));</b>
+<b class="nc">&nbsp;    GameState.gameOverData.setBuildings(BuildingType.LEARNING, world.getBuildingCount(BuildingType.LEARNING));</b>
+<b class="nc">&nbsp;    GameState.gameOverData.setBuildings(BuildingType.EATING, world.getBuildingCount(BuildingType.EATING));</b>
+<b class="nc">&nbsp;    GameState.gameOverData.setBuildings(BuildingType.SLEEPING, world.getBuildingCount(BuildingType.SLEEPING));</b>
+<b class="nc">&nbsp;    pauseButtonCell.setActor(GameState.paused ? playImage : pauseImage);</b>
+<b class="nc">&nbsp;    settingsButtonCell.setActor(gearImage);</b>
+<b class="nc">&nbsp;    if (world.getBuildingCount(BuildingType.RECREATION) &gt;= 4) {</b>
+<b class="nc">&nbsp;      if (AchievementManager.getInstance().getAchievements().get(2).isUnlocked() == false) {</b>
+<b class="nc">&nbsp;        gameScreen.addMoneyRep(3000, 10);</b>
+<b class="nc">&nbsp;        String reward = &quot;&lt;html&gt;&lt;p&gt;Achievement: F is for fun&lt;/p&gt;&lt;p&gt;You have received $3000 and 10% rep&lt;/p&gt;&lt;html&gt;&quot;;</b>
+<b class="nc">&nbsp;        AchievementManager.getInstance().setReward(reward);</b>
+<b class="nc">&nbsp;        AchievementManager.getInstance().checkAchievement(&quot;F_FOR_FUN&quot;);</b>
+<b class="nc">&nbsp;        world.setPopup(&quot;reward&quot;);</b>
+&nbsp;      }
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Update the bounds of the background &amp; table actors to fit the new size of the
+&nbsp;   * screen.
+&nbsp;   *
+&nbsp;   * @param width  - The new width of the screen in pixels.
+&nbsp;   * @param height - The enw height of the screen in pixels.
+&nbsp;   */
+&nbsp;  public void resize(int width, int height) {
+<b class="nc">&nbsp;    bar.setBounds(0, height * 0.95f, width, height * 0.05f);</b>
+<b class="nc">&nbsp;    infoTable.setBounds(0, height * 0.95f, width, height * 0.05f);</b>
+<b class="nc">&nbsp;    titleTable.setBounds(0, height * 0.95f, width, height * 0.05f);</b>
+&nbsp;
+<b class="nc">&nbsp;    float counterTableWidth = height * 0.27f;</b>
+<b class="nc">&nbsp;    buildingCountersTableCell.width(counterTableWidth).height(height * 0.05f);</b>
+<b class="nc">&nbsp;    for (int i = 0; i &lt; 4; i++) {</b>
+<b class="nc">&nbsp;      buildingCounterLabels[i].setFontScale(height * 0.0015f);</b>
+<b class="nc">&nbsp;      buildingCounterCells[i].width(counterTableWidth * 0.5f).height(height * 0.025f);</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    realTimeLabel.setFontScale(height * 0.002f);</b>
+<b class="nc">&nbsp;    realTimeLabelCell.width(height * 0.08f).height(height * 0.05f);</b>
+<b class="nc">&nbsp;    realTimeLabelCell.padLeft(height * 0.005f);</b>
+<b class="nc">&nbsp;    gameTimeLabel.setFontScale(height * 0.002f);</b>
+<b class="nc">&nbsp;    gameTimeLabelCell.width(height * 0.08f).height(height * 0.05f);</b>
+<b class="nc">&nbsp;    gameTimeLabelCell.padLeft(height * 0.005f);</b>
+<b class="nc">&nbsp;    moneyLabel.setFontScale(height * 0.002f);</b>
+<b class="nc">&nbsp;    moneyLabelCell.width(height * 0.08f).height(height * 0.05f);</b>
+<b class="nc">&nbsp;    moneyLabelCell.padLeft(height * 0.07f);</b>
+<b class="nc">&nbsp;    repLabel.setFontScale(height * 0.002f);</b>
+<b class="nc">&nbsp;    repLabelCell.width(height * 0.08f).height(height * 0.05f);</b>
+<b class="nc">&nbsp;    repLabelCell.padLeft(height * 0.14f);</b>
+<b class="nc">&nbsp;    eventTimeLabel.setFontScale(height * 0.002f);</b>
+<b class="nc">&nbsp;    eventTimeLabelCell.width(height * 0.08f).height(height * 0.05f);</b>
+<b class="nc">&nbsp;    eventTimeLabelCell.padLeft(height * 0.02f);</b>
+<b class="nc">&nbsp;    scoreLabel.setFontScale(height * 0.002f);</b>
+<b class="nc">&nbsp;    scoreLabelCell.width(height * 0.04f).height(height * 0.05f);</b>
+<b class="nc">&nbsp;    scoreLabelCell.padLeft(Math.min(width, height * 2) * 0.1f);</b>
+<b class="nc">&nbsp;    settingsButtonCell.width(height * 0.03f).height(height * 0.03f);</b>
+<b class="nc">&nbsp;    pauseButtonCell.width(height * 0.03f).height(height * 0.03f)</b>
+<b class="nc">&nbsp;        .padLeft(height * 0.02f).padRight(height * 0.01f);</b>
+&nbsp;
+<b class="nc">&nbsp;    titleLabel.setFontScale(height * 0.003f);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  public void reset() {
+<b class="nc">&nbsp;    pauseButtonCell.setActor(playImage);</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>

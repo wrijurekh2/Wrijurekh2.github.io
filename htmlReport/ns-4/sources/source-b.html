@@ -1,0 +1,439 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > StartMenuScreen</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">io.github.unisim.ui</a>
+</div>
+
+<h1>Coverage Summary for Class: StartMenuScreen (io.github.unisim.ui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StartMenuScreen</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/64)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">StartMenuScreen$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">StartMenuScreen$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">StartMenuScreen$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">StartMenuScreen$4</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">StartMenuScreen$5</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">StartMenuScreen$6</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/81)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package io.github.unisim.ui;
+&nbsp;
+&nbsp;import com.badlogic.gdx.Gdx;
+&nbsp;import com.badlogic.gdx.InputMultiplexer;
+&nbsp;import com.badlogic.gdx.Screen;
+&nbsp;import com.badlogic.gdx.graphics.Texture;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.Stage;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Image;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Label;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.Table;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+&nbsp;import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+&nbsp;import com.badlogic.gdx.utils.ScreenUtils;
+&nbsp;import io.github.unisim.GameState;
+&nbsp;
+&nbsp;/**
+&nbsp; * The start menu screen which presents the player with the option to start the
+&nbsp; * game, access the settings menu, acievements screen, leaderboard screen, how
+&nbsp; * to play screen and an option to exit the game
+&nbsp; */
+&nbsp;public class StartMenuScreen implements Screen {
+&nbsp;  private Stage stage;
+&nbsp;  private Table mainTable;
+&nbsp;  private Table secTable;
+&nbsp;  private Skin altskin;
+&nbsp;  private TextButton playButton;
+&nbsp;  private TextButton settingsButton;
+&nbsp;  private TextButton exitButton;
+&nbsp;  private TextButton howToButton;
+&nbsp;  private TextButton achieveButton;
+&nbsp;  private TextButton leaderButton;
+<b class="nc">&nbsp;  private InputMultiplexer inputMultiplexer = new InputMultiplexer();</b>
+<b class="nc">&nbsp;  private Popups popup = new Popups(null);</b>
+&nbsp;
+&nbsp;  /**
+&nbsp;   * Create a new StartMenuScreen and draw the initial UI layout.
+&nbsp;   */
+<b class="nc">&nbsp;  public StartMenuScreen() {</b>
+<b class="nc">&nbsp;    stage = new Stage();</b>
+<b class="nc">&nbsp;    mainTable = new Table();</b>
+<b class="nc">&nbsp;    secTable = new Table();</b>
+<b class="nc">&nbsp;    altskin = GameState.altSkin;</b>
+&nbsp;    // Create an Image for the background
+<b class="nc">&nbsp;    Image backgroundImage = new Image(new Texture(Gdx.files.internal(&quot;ui/mainmenubackground.gif&quot;)));</b>
+<b class="nc">&nbsp;    backgroundImage.setFillParent(true); // Fill the screen with image</b>
+<b class="nc">&nbsp;    stage.addActor(backgroundImage); // Add the background to the stage</b>
+&nbsp;
+&nbsp;    // Play button
+<b class="nc">&nbsp;    playButton = new TextButton(&quot;Play&quot;, altskin);</b>
+<b class="nc">&nbsp;    playButton.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+&nbsp;        // Switch to the game screen
+<b class="nc">&nbsp;        popup.namePopup();</b>
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // How to play button
+<b class="nc">&nbsp;    howToButton = new TextButton(&quot;How to play&quot;, altskin);</b>
+<b class="nc">&nbsp;    howToButton.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+<b class="nc">&nbsp;        GameState.currentScreen = GameState.howToPlayScreen;</b>
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Settings button
+<b class="nc">&nbsp;    settingsButton = new TextButton(&quot;Settings&quot;, altskin);</b>
+<b class="nc">&nbsp;    settingsButton.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+&nbsp;        // Switch to the settings screen
+<b class="nc">&nbsp;        GameState.pushScreen(GameState.settingScreen);</b>
+<b class="nc">&nbsp;        GameState.currentScreen = GameState.settingScreen;</b>
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Exit button
+<b class="nc">&nbsp;    exitButton = new TextButton(&quot;Exit&quot;, altskin);</b>
+<b class="nc">&nbsp;    exitButton.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+&nbsp;        // Exit game
+<b class="nc">&nbsp;        Gdx.app.exit();</b>
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Achievements button
+<b class="nc">&nbsp;    achieveButton = new TextButton(&quot;Achievements&quot;, altskin);</b>
+<b class="nc">&nbsp;    achieveButton.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+<b class="nc">&nbsp;        GameState.achievementScreen = new AchievementScreen();</b>
+<b class="nc">&nbsp;        GameState.pushScreen(GameState.achievementScreen);</b>
+<b class="nc">&nbsp;        GameState.currentScreen = GameState.achievementScreen;</b>
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Leaderboard button
+<b class="nc">&nbsp;    leaderButton = new TextButton(&quot;Leaderboard&quot;, altskin);</b>
+<b class="nc">&nbsp;    leaderButton.addListener(new ClickListener() {</b>
+&nbsp;      @Override
+&nbsp;      public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+<b class="nc">&nbsp;        GameState.leaderboardScreen = new LeaderboardScreen();</b>
+<b class="nc">&nbsp;        GameState.pushScreen(GameState.leaderboardScreen);</b>
+<b class="nc">&nbsp;        GameState.currentScreen = GameState.leaderboardScreen;</b>
+&nbsp;      }
+&nbsp;    });
+&nbsp;
+&nbsp;    // Add UI elements to the stage
+<b class="nc">&nbsp;    Label title = new Label(&quot;UniSim&quot;, altskin);</b>
+<b class="nc">&nbsp;    title.setFontScale(2f);</b>
+<b class="nc">&nbsp;    title.setPosition(Gdx.graphics.getWidth() / 2 - 110,</b>
+<b class="nc">&nbsp;        Gdx.graphics.getHeight() - 170);</b>
+<b class="nc">&nbsp;    stage.addActor(title);</b>
+&nbsp;
+&nbsp;    // Main table containing play,howToPlay, settings, and exit buttons
+<b class="nc">&nbsp;    mainTable.setFillParent(true);</b>
+<b class="nc">&nbsp;    mainTable.center().center();</b>
+<b class="nc">&nbsp;    mainTable.pad(100, 100, 100, 100);</b>
+<b class="nc">&nbsp;    mainTable.add(playButton).center().width(250).height(40).padBottom(10);</b>
+<b class="nc">&nbsp;    mainTable.row().padTop(10);</b>
+<b class="nc">&nbsp;    mainTable.add(howToButton).center().width(250).height(40).padBottom(10);</b>
+<b class="nc">&nbsp;    mainTable.row().padTop(10);</b>
+<b class="nc">&nbsp;    mainTable.add(settingsButton).center().width(250).height(40).padBottom(10);</b>
+<b class="nc">&nbsp;    mainTable.row().padTop(10);</b>
+<b class="nc">&nbsp;    mainTable.add(exitButton).center().width(250).height(40);</b>
+<b class="nc">&nbsp;    stage.addActor(mainTable);</b>
+&nbsp;
+&nbsp;    // Secondary table for the achievement and leaderboard buttons
+<b class="nc">&nbsp;    secTable.setFillParent(true);</b>
+<b class="nc">&nbsp;    secTable.pad(680, 1070, 100, 100);</b>
+<b class="nc">&nbsp;    secTable.add(achieveButton).center().width(300).height(40);</b>
+<b class="nc">&nbsp;    secTable.row();</b>
+<b class="nc">&nbsp;    secTable.row();</b>
+<b class="nc">&nbsp;    secTable.add(leaderButton).center().width(300).height(40).padTop(20);</b>
+<b class="nc">&nbsp;    stage.addActor(secTable);</b>
+&nbsp;
+<b class="nc">&nbsp;    inputMultiplexer.addProcessor(GameState.fullscreenInputProcessor);</b>
+<b class="nc">&nbsp;    inputMultiplexer.addProcessor(stage);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void show() {
+<b class="nc">&nbsp;    GameState.gameScreen = new GameScreen();</b>
+<b class="nc">&nbsp;    popup.setActive(false);</b>
+<b class="nc">&nbsp;    if (GameState.musicManager.getMusic() == null) { // Plays menu music</b>
+<b class="nc">&nbsp;      GameState.musicManager.stopMusic();</b>
+<b class="nc">&nbsp;      GameState.musicManager.playMenuMusic();</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void render(float delta) {
+&nbsp;    // Clear the screen
+<b class="nc">&nbsp;    ScreenUtils.clear(GameState.UISecondaryColour);</b>
+&nbsp;
+&nbsp;    // Draw the stage containing buttons
+<b class="nc">&nbsp;    stage.act(delta);</b>
+<b class="nc">&nbsp;    stage.draw();</b>
+&nbsp;
+&nbsp;    // Disables any interaction with menu screen when a popup is active
+<b class="nc">&nbsp;    if (popup.getActive()) {</b>
+<b class="nc">&nbsp;      Gdx.input.setInputProcessor(null);</b>
+&nbsp;    } else {
+<b class="nc">&nbsp;      Gdx.input.setInputProcessor(inputMultiplexer);</b>
+&nbsp;    }
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void resize(int width, int height) {
+<b class="nc">&nbsp;    stage.getViewport().update(width, height, true);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void pause() {
+<b class="nc">&nbsp;  }</b>
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void resume() {
+<b class="nc">&nbsp;    Gdx.input.setInputProcessor(inputMultiplexer);</b>
+&nbsp;  }
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void hide() {
+<b class="nc">&nbsp;  }</b>
+&nbsp;
+&nbsp;  @Override
+&nbsp;  public void dispose() {
+<b class="nc">&nbsp;    stage.dispose();</b>
+<b class="nc">&nbsp;    altskin.dispose();</b>
+&nbsp;  }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-01-12 22:34</div>
+</div>
+</body>
+</html>
